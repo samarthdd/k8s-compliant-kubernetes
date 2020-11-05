@@ -71,5 +71,10 @@
     "194.132.164.168/32",
     "194.132.164.169/32",
     "193.187.219.4/32"
-  ]
+  ],
+  "extra_tags": {
+    "Owner": "cristian.klein@elastisys.com",
+    "Scope": "#p1-gp-gov-uk-website",
+    "Team": "Elastisys"
+  }
 }
