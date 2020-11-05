@@ -3,8 +3,8 @@ global:
   cloudProvider: aws
   environmentName: glasswall-test-ck
   dnsPrefix: glasswall-test-ck
-  baseDomain: "gov.uk.ck.glasswall-ck8s-proxy.com"
-  opsDomain: "gov.uk.ck.ops.glasswall-ck8s-proxy.com"
+  baseDomain: "ck.glasswall-ck8s-proxy.com"
+  opsDomain: "ops.ck.glasswall-ck8s-proxy.com"
   issuer: letsencrypt-staging
   verifyTls: false
   storageClass: ebs-gp2
