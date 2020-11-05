@@ -3,16 +3,16 @@ global:
   cloudProvider: aws
   environmentName: glasswall-test-ck
   dnsPrefix: glasswall-test-ck
-  baseDomain: "set-me"
-  opsDomain: "set-me"
+  baseDomain: "gov.uk.ck.glasswall-ck8s-proxy.com"
+  opsDomain: "gov.uk.ck.ops.glasswall-ck8s-proxy.com"
   issuer: letsencrypt-staging
   verifyTls: false
   storageClass: ebs-gp2
   clusterDns: "10.43.0.10"
 s3:
-  region: "set-me"
-  regionAddress: "set-me"
-  regionEndpoint: "set-me"
+  region: "eu-west-2"
+  regionAddress: "s3.eu-west-2.amazonaws.com"
+  regionEndpoint: "https://s3.eu-west-2.amazonaws.com"
   buckets:
     harbor: "glasswall-test-ck-harbor"
     velero: "glasswall-test-ck-velero"
@@ -354,7 +354,7 @@ issuers:
   letsencrypt:
     enabled: true
     prod:
-      email: "set-me"
+      email: "cristian.klein+leprod@elastisys.com"
     staging:
-      email: "set-me"
+      email: "cristian.klein+lestag@elastisys.com"
   extraIssuers: []
