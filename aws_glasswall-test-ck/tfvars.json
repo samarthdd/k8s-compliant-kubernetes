@@ -1,0 +1,60 @@
+{
+  "region": "us-west-1",
+  "prefix_sc": "",
+  "prefix_wc": "",
+  "machines_sc": {
+    "master-0": {
+      "node_type": "master",
+      "size": "t3.small",
+      "image": {
+        "name": "ami-025fd2f1456a0e2e5"
+      },
+      "provider_settings": null
+    },
+    "worker-0": {
+      "node_type": "worker",
+      "size": "t3.xlarge",
+      "image": {
+        "name": "ami-025fd2f1456a0e2e5"
+      },
+      "provider_settings": null
+    },
+    "worker-1": {
+      "node_type": "worker",
+      "size": "t3.large",
+      "image": {
+        "name": "ami-025fd2f1456a0e2e5"
+      },
+      "provider_settings": null
+    }
+  },
+  "machines_wc": {
+    "master-0": {
+      "node_type": "master",
+      "size": "t3.small",
+      "image": {
+        "name": "ami-025fd2f1456a0e2e5"
+      },
+      "provider_settings": null
+    },
+    "worker-0": {
+      "node_type": "worker",
+      "size": "t3.large",
+      "image": {
+        "name": "ami-025fd2f1456a0e2e5"
+      },
+      "provider_settings": null
+    },
+    "worker-1": {
+      "node_type": "worker",
+      "size": "t3.large",
+      "image": {
+        "name": "ami-025fd2f1456a0e2e5"
+      },
+      "provider_settings": null
+    }
+  },
+  "public_ingress_cidr_whitelist": [],
+  "api_server_whitelist": [],
+  "nodeport_whitelist": []
+}
