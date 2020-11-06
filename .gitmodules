@@ -7,3 +7,6 @@
 [submodule "ck8s-cluster"]
 	path = ck8s-cluster
 	url = git@github.com:elastisys/ck8s-cluster
+[submodule "icap-infrastructure"]
+	path = icap-infrastructure
+	url = git@github.com:elastisys/icap-infrastructure.git
