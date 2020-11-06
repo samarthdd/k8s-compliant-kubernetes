@@ -16,3 +16,6 @@
 [submodule "icap-management-ui"]
 	path = icap-management-ui
 	url = git@github.com:elastisys/icap-management-ui.git
+[submodule "icap-adaptation-service"]
+	path = icap-adaptation-service
+	url = git@github.com:elastisys/icap-adaptation-service.git
