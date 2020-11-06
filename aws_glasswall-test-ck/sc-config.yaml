@@ -1,5 +1,5 @@
 global:
-  ck8sVersion: 0.7.0
+  ck8sVersion: latest
   cloudProvider: aws
   environmentName: glasswall-test-ck
   dnsPrefix: glasswall-test-ck
