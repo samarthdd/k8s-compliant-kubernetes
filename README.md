@@ -30,6 +30,20 @@
         ./bin/ck8s ops kubectl wc -n icap-adaptation edit deployment/glasswall-icap-nginx
         ./bin/ck8s ops kubectl wc -n icap-adaptation edit deployment/glasswall-icap-squid
 
+## Running ICAP
+
+1. Add the following record in `/etc/hosts` file:
+
+        127.0.0.1       gov.uk.glasswall-ck8s-proxy.com www.gov.uk.glasswall-ck8s-proxy.com assets.publishing.service.gov.uk.glasswall-ck8s-proxy.com
+
+2. Forward `4443` port to the `icap-adaptation` service:
+
+        ./bin/ck8s ops kubectl wc -n icap-adaptation port-forward svc/glasswall-icap-reverse-proxy-nginx 4443:443
+
+3. Open a link to a selected resource in an internet browser, remember to use appropiate port, for example: https://www.gov.uk.glasswall-ck8s-proxy.com:4443/guidance/social-care-common-inspection-framework-sccif-voluntary-adoption-agencies/download-pdf-version
+
+    That should spawn a new pod in `icap-adaptation` namespace.
+
 ## Delete ICAP deployment
 
         ./bin/ck8s ops helmfile wc -f helmfile/02-glasswall-icap.yaml destroy
