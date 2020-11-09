@@ -14,11 +14,11 @@ s3:
   regionAddress: "s3.eu-west-2.amazonaws.com"
   regionEndpoint: "https://s3.eu-west-2.amazonaws.com"
   buckets:
-    harbor: "glasswall-test-ck-harbor"
-    velero: "glasswall-test-ck-velero"
-    elasticsearch: "glasswall-test-ck-es-backup"
-    influxDB: "glasswall-test-ck-influxdb"
-    scFluentd: "glasswall-test-ck-sc-logs"
+    harbor: "glasswall-ck-test-harbor"
+    velero: "glasswall-ck-test-velero"
+    elasticsearch: "glasswall-ck-test-es-backup"
+    influxDB: "glasswall-ck-test-influxdb"
+    scFluentd: "glasswall-ck-test-sc-logs"
 user:
   namespaces:
     - demo1
