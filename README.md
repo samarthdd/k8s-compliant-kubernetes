@@ -17,6 +17,7 @@
 
 3. Create PVs
 
+        cd compliantkubernetes-apps
         ./bin/ck8s ops kubectl wc apply -f ../local-storage-pv.yaml
 
 4. Find the IP address of icap-adaptaion service:
