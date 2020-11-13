@@ -4,15 +4,19 @@
 
 1. Deploy ck8s-cluster - follow the instructions in [README file](ck8s-cluster/README.md)
 
-    Currently, Glasswall ICAP components require running as root, so some of the checks in the restricted PSP has to be relaxed.
 
 2. Deploy compliantkubernetes-apps - follow the instructions in [README file](compliantkubernetes-apps/README.md)
 
 The Glasswall ICAP deployment is not fully automated yet, so you need to perform some manual actions listed below.
+Also, Glasswall ICAP components require running as root, so some of the checks in the restricted PSP has to be relaxed.
+
+3. Relax PodSecurityPolicy:
+
+        cd compliantkubernetes-apps
+        ./bin/ck8s ops kubectl wc apply -f ../default-restricted-psp.yaml
 
 3. Create PVs
 
-        cd compliantkubernetes-apps
         ./bin/ck8s ops kubectl wc apply -f ../local-storage-pv.yaml
 
 4. Create secret
