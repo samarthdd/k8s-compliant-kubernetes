@@ -3,22 +3,22 @@ global:
   cloudProvider: aws
   environmentName: glasswall-test-ck
   dnsPrefix: glasswall-test-ck
-  baseDomain: "ops.ck.glasswall-ck8s-proxy.com"
-  opsDomain: "ops.ck.glasswall-ck8s-proxy.com"
+  baseDomain: ops.ck.glasswall-ck8s-proxy.com
+  opsDomain: ops.ck.glasswall-ck8s-proxy.com
   issuer: letsencrypt-prod
   verifyTls: false
   storageClass: ebs-gp2
-  clusterDns: "10.43.0.10"
+  clusterDns: 10.43.0.10
 s3:
-  region: "eu-west-2"
-  regionAddress: "s3.eu-west-2.amazonaws.com"
-  regionEndpoint: "https://s3.eu-west-2.amazonaws.com"
+  region: eu-west-2
+  regionAddress: s3.eu-west-2.amazonaws.com
+  regionEndpoint: https://s3.eu-west-2.amazonaws.com
   buckets:
-    harbor: "glasswall-ck-test-harbor"
-    velero: "glasswall-ck-test-velero"
-    elasticsearch: "glasswall-ck-test-es-backup"
-    influxDB: "glasswall-ck-test-influxdb"
-    scFluentd: "glasswall-ck-test-sc-logs"
+    harbor: glasswall-ck-test-harbor
+    velero: glasswall-ck-test-velero
+    elasticsearch: glasswall-ck-test-es-backup
+    influxDB: glasswall-ck-test-influxdb
+    scFluentd: glasswall-ck-test-sc-logs
 user:
   grafana:
     enabled: true
@@ -89,6 +89,7 @@ harbor:
         cpu: 200m
   persistence:
     type: s3
+    disableRedirect: false
 prometheus:
   storage:
     size: 2Gi
@@ -140,7 +141,7 @@ elasticsearch:
   masterNode:
     count: 1
     storageSize: 1Gi
-    javaOpts: "-Xms512m -Xmx512m"
+    javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
         memory: 1024Mi
@@ -151,7 +152,7 @@ elasticsearch:
   dataNode:
     count: 2
     storageSize: 18Gi
-    javaOpts: "-Xms512m -Xmx512m"
+    javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
         memory: 1024Mi
@@ -161,7 +162,7 @@ elasticsearch:
         cpu: 1
   clientNode:
     count: 1
-    javaOpts: "-Xms512m -Xmx512m"
+    javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
         memory: 1024Mi
@@ -183,8 +184,8 @@ elasticsearch:
     min: 7
     max: 14
     ageSeconds: 864000
-    retentionSchedule: "@daily"
-    backupSchedule: "0 */2 * * *"
+    retentionSchedule: '@daily'
+    backupSchedule: 0 */2 * * *
   extraRoleMappings: []
   #- mapping_name: readall_and_monitor
   #  definition:
@@ -220,8 +221,8 @@ fluentd:
 logRetention:
   days: 7
 influxDB:
-  user: "admin"
-  address: "influxdb.influxdb-prometheus.svc:8088"
+  user: admin
+  address: influxdb.influxdb-prometheus.svc:8088
   retention:
     ageWc: 2d
     ageSc: 3d
@@ -244,13 +245,13 @@ alerts:
   alertTo: "null"
   opsGenieHeartbeat:
     enabled: false
-    url: "https://api.eu.opsgenie.com/v2/heartbeats"
-    name: "set-me"
+    url: https://api.eu.opsgenie.com/v2/heartbeats
+    name: set-me
     enable: false
   slack:
-    channel: "set-me"
+    channel: set-me
   opsGenie:
-    apiUrl: "https://api.eu.opsgenie.com"
+    apiUrl: https://api.eu.opsgenie.com
 ck8sdash:
   enabled: true
   tolerations: []
@@ -275,7 +276,7 @@ ck8sdash:
 externalTrafficPolicy:
   local: false
   whitelistRange:
-    global: "0.0.0.0/0"
+    global: 0.0.0.0/0
     ck8sdash: false
     dex: false
     kibana: false
@@ -306,9 +307,9 @@ nginxIngress:
     #   cpu: 100m
     #   memory: 64Mi
     tolerations:
-      - key: "nodeType"
-        operator: "Exists"
-        effect: "NoSchedule"
+      - key: nodeType
+        operator: Exists
+        effect: NoSchedule
     affinity: {}
     nodeSelector: {}
     config:
@@ -329,13 +330,15 @@ nginxIngress:
     #   cpu: 100m
     #   memory: 64Mi
     tolerations:
-      - key: "nodeType"
-        operator: "Equal"
-        value: "elastisys"
-        effect: "NoSchedule"
+      - key: nodeType
+        operator: Equal
+        value: elastisys
+        effect: NoSchedule
     affinity: {}
     nodeSelector: {}
 velero:
+  tolerations: []
+  nodeSelector: {}
   resources:
     limits:
       cpu: 200m
@@ -343,9 +346,6 @@ velero:
     requests:
       cpu: 100m
       memory: 100Mi
-  tolerations: []
-  affinity: {}
-  nodeSelector: {}
   restic:
     tolerations: []
     resources:
@@ -355,6 +355,7 @@ velero:
       requests:
         cpu: 100m
         memory: 100Mi
+  affinity: {}
 restore:
   cluster: false
   velero: false
@@ -363,9 +364,9 @@ issuers:
   letsencrypt:
     enabled: true
     prod:
-      email: "cristian.klein+leprod@elastisys.com"
+      email: cristian.klein+leprod@elastisys.com
     staging:
-      email: "cristian.klein+lestag@elastisys.com"
+      email: cristian.klein+lestag@elastisys.com
   extraIssuers: []
 certmanager:
   resources: {}

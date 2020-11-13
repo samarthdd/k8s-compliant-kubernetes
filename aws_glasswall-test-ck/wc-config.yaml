@@ -3,22 +3,22 @@ global:
   cloudProvider: aws
   environmentName: glasswall-test-ck
   dnsPrefix: glasswall-test-ck
-  baseDomain: "ops.ck.glasswall-ck8s-proxy.com"
-  opsDomain: "ops.ck.glasswall-ck8s-proxy.com"
+  baseDomain: ops.ck.glasswall-ck8s-proxy.com
+  opsDomain: ops.ck.glasswall-ck8s-proxy.com
   issuer: letsencrypt-prod
   verifyTls: false
   storageClass: ebs-gp2
-  clusterDns: "10.43.0.10"
+  clusterDns: 10.43.0.10
 s3:
-  region: "eu-west-2"
-  regionAddress: "s3.eu-west-2.amazonaws.com"
-  regionEndpoint: "https://s3.eu-west-2.amazonaws.com"
+  region: eu-west-2
+  regionAddress: s3.eu-west-2.amazonaws.com
+  regionEndpoint: https://s3.eu-west-2.amazonaws.com
   buckets:
-    harbor: "glasswall-ck-test-harbor"
-    velero: "glasswall-ck-test-velero"
-    elasticsearch: "glasswall-ck-test-es-backup"
-    influxDB: "glasswall-ck-test-influxdb"
-    scFluentd: "glasswall-ck-test-sc-logs"
+    harbor: glasswall-ck-test-harbor
+    velero: glasswall-ck-test-velero
+    elasticsearch: glasswall-ck-test-es-backup
+    influxDB: glasswall-ck-test-influxdb
+    scFluentd: glasswall-ck-test-sc-logs
 user:
   namespaces:
     - demo1
@@ -40,8 +40,8 @@ falco:
       cpu: 100m
       memory: 512Mi
   tolerations:
-    - key: "node-role.kubernetes.io/master"
-      effect: "NoSchedule"
+    - key: node-role.kubernetes.io/master
+      effect: NoSchedule
   affinity: {}
   nodeSelector: {}
   alerts:
@@ -49,7 +49,7 @@ falco:
     # supported: alertmanager|slack
     type: alertmanager
     priority: notice
-    hostPort: "http://prometheus-operator-alertmanager.monitoring:9093"
+    hostPort: http://prometheus-operator-alertmanager.monitoring:9093
     # if type=slack falco.alerts.slackWebhook must be set in the secrets yaml file
 prometheus:
   storage:
@@ -74,7 +74,7 @@ opa:
   imageRegistry:
     enabled: true
     enforcement: dryrun
-    URL: "harbor.set-me"
+    URL: harbor.set-me
   networkPolicies:
     enabled: true
     enforcement: dryrun
@@ -93,6 +93,10 @@ elasticsearch:
   clientNode:
     count: 1
 fluentd:
+  tolerations: []
+  # Only run on control plane nodes
+  nodeSelector:
+    node-role.kubernetes.io/master: ""
   resources:
     limits:
       cpu: 200m
@@ -100,9 +104,7 @@ fluentd:
     requests:
       cpu: 200m
       memory: 500Mi
-  tolerations: []
   affinity: {}
-  nodeSelector: {}
   extraConfigMaps: {}
   user:
     resources:
@@ -139,7 +141,7 @@ ck8sdash:
 externalTrafficPolicy:
   local: false
   whitelistRange:
-    global: "0.0.0.0/0"
+    global: 0.0.0.0/0
     ck8sdash: false
     prometheus: false
 nfsProvisioner:
@@ -164,9 +166,9 @@ nginxIngress:
     #   cpu: 100m
     #   memory: 64Mi
     tolerations:
-      - key: "nodeType"
-        operator: "Exists"
-        effect: "NoSchedule"
+      - key: nodeType
+        operator: Exists
+        effect: NoSchedule
     affinity: {}
     nodeSelector: {}
     config:
@@ -187,13 +189,15 @@ nginxIngress:
     #   cpu: 100m
     #   memory: 64Mi
     tolerations:
-      - key: "nodeType"
-        operator: "Equal"
-        value: "elastisys"
-        effect: "NoSchedule"
+      - key: nodeType
+        operator: Equal
+        value: elastisys
+        effect: NoSchedule
     affinity: {}
     nodeSelector: {}
 velero:
+  tolerations: []
+  nodeSelector: {}
   resources:
     limits:
       cpu: 200m
@@ -201,9 +205,6 @@ velero:
     requests:
       cpu: 100m
       memory: 100Mi
-  tolerations: []
-  affinity: {}
-  nodeSelector: {}
   restic:
     tolerations: []
     resources:
@@ -213,13 +214,14 @@ velero:
       requests:
         cpu: 100m
         memory: 100Mi
+  affinity: {}
 issuers:
   letsencrypt:
     enabled: true
     prod:
-      email: "set-me"
+      email: set-me
     staging:
-      email: "set-me"
+      email: set-me
   extraIssuers: []
 certmanager:
   resources: {}
