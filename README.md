@@ -21,6 +21,7 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
 4. Create secret
 
+        ./bin/ck8s ops kubectl wc create ns icap-adaptation
         ./bin/ck8s ops kubectl wc -n icap-adaptation create secret  generic transactionstoresecret \
         --from-literal=accountName=user \
         --from-literal=accountKey='key'
@@ -29,9 +30,9 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
 
-6. Find the IP address of icap-adaptaion service:
+6. Find the cluster IP address of icap-adaptaion service:
 
-        ./bin/ck8s ops kubectl wc -n icap-adaptation get svc | grep icap-service
+        ./bin/ck8s ops kubectl wc -n icap-adaptation get svc icap-service -o jsonpath={.spec.clusterIP}
 
 7. Replace env var with the IP value
     The server url should be : icap://<ip_recorded above>:1344/gw_rebuild
