@@ -8,23 +8,28 @@
 
 2. Deploy compliantkubernetes-apps - follow the instructions in [README file](compliantkubernetes-apps/README.md)
 
-    As part of the Compliant Kubernetes Apps deployment also Glasswall ICAP components defined in `helmfile/02-glasswall-icap.yaml` are installed.
-    If you need to reapply it again use:
-
-        ./bin/ck8s ops helmfile wc -f helmfile/02-glasswall-icap.yaml apply
-
-    The Glasswall ICAP deployment is not fully automated yet, so you need to perform some manual actions listed below.
+The Glasswall ICAP deployment is not fully automated yet, so you need to perform some manual actions listed below.
 
 3. Create PVs
 
         cd compliantkubernetes-apps
         ./bin/ck8s ops kubectl wc apply -f ../local-storage-pv.yaml
 
-4. Find the IP address of icap-adaptaion service:
+4. Create secret
+
+        ./bin/ck8s ops kubectl wc -n icap-adaptation create secret  generic transactionstoresecret \
+        --from-literal=accountName=user \
+        --from-literal=accountKey='key'
+
+5. Deploy Glasswall ICAP components:
+
+        ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
+
+6. Find the IP address of icap-adaptaion service:
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation get svc | grep icap-service
 
-5. Replace env var with the IP value
+7. Replace env var with the IP value
     The server url should be : icap://<ip_recorded above>:1344/gw_rebuild
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation edit deployment/glasswall-icap-nginx
@@ -48,3 +53,8 @@
 
         ./bin/ck8s ops helmfile wc -f helmfile/02-glasswall-icap.yaml destroy
         ./bin/ck8s ops kubectl wc delete pv local-pv-1 local-pv-2
+
+To force delete objects you can use:
+
+        ./bin/ck8s ops kubectl wc -n icap-adaptation delete all --all
+        ./bin/ck8s ops kubectl wc -n icap-adaptation delete pvc --all
