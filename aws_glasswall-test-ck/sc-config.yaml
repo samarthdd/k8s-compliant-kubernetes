@@ -346,6 +346,15 @@ velero:
   tolerations: []
   affinity: {}
   nodeSelector: {}
+  restic:
+    tolerations: []
+    resources:
+      limits:
+        cpu: 200m
+        memory: 200Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
 restore:
   cluster: false
   velero: false
@@ -358,3 +367,18 @@ issuers:
     staging:
       email: "cristian.klein+lestag@elastisys.com"
   extraIssuers: []
+certmanager:
+  resources: {}
+  nodeSelector: {}
+  tolerations: {}
+  affinity: {}
+  webhook:
+    resources: {}
+    nodeSelector: {}
+    tolerations: {}
+    affinity: {}
+  cainjector:
+    resources: {}
+    nodeSelector: {}
+    tolerations: {}
+    affinity: {}

@@ -204,6 +204,15 @@ velero:
   tolerations: []
   affinity: {}
   nodeSelector: {}
+  restic:
+    tolerations: []
+    resources:
+      limits:
+        cpu: 200m
+        memory: 200Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
 issuers:
   letsencrypt:
     enabled: true
@@ -212,3 +221,18 @@ issuers:
     staging:
       email: "set-me"
   extraIssuers: []
+certmanager:
+  resources: {}
+  nodeSelector: {}
+  tolerations: {}
+  affinity: {}
+  webhook:
+    resources: {}
+    nodeSelector: {}
+    tolerations: {}
+    affinity: {}
+  cainjector:
+    resources: {}
+    nodeSelector: {}
+    tolerations: {}
+    affinity: {}
