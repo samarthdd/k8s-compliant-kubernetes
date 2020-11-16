@@ -1,6 +1,28 @@
 # gp-gov-uk-website
 
-## Deployment instruction
+## Build instructions
+
+1. Build `reverse-proxy-nginx` Docker image and push it to the Elastisys repository
+
+       docker build k8-reverse-proxy/stable-src/nginx -t elastisys/reverse-proxy-nginx:0.0.1
+       docker push elastisys/reverse-proxy-nginx:0.0.1
+
+2. Build `reverse-proxy-squid` Docker image and push it to the Elastisys repository
+
+       docker build k8-reverse-proxy/stable-src/squid/ -t elastisys/reverse-proxy-squid:0.0.1
+       docker push elastisys/reverse-proxy-squid:0.0.1
+
+3. Build `reverse-proxy-c-icap` Docker image and push it to the Elastisys repository
+
+        docker build k8-reverse-proxy/stable-src/c-icap -t elastisys/reverse-proxy-c-icap:0.0.1
+        docker push elastisys/reverse-proxy-c-icap:0.0.1
+
+4. Build `icap-request-processing` Docker image and push it to the Elastisys repository
+
+        docker build icap-request-processing -t elastisys/icap-request-processing:test
+        docker push elastisys/icap-request-processing:test
+
+## Deployment instructions
 
 1. Deploy ck8s-cluster - follow the instructions in [README file](ck8s-cluster/README.md)
 
