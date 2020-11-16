@@ -28,5 +28,5 @@
 	url = git@github.com:elastisys/icap-request-processing.git
 [submodule "k8-reverse-proxy"]
 	path = k8-reverse-proxy
-	url = https://github.com/k8-proxy/k8-reverse-proxy.git
+	url = git@github.com:elastisys/k8-reverse-proxy.git
 	branch = develop
