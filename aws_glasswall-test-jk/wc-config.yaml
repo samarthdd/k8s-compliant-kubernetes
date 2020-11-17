@@ -5,7 +5,7 @@ global:
   dnsPrefix: glasswall-test
   baseDomain: ops.glasswall-ck8s-proxy.com
   opsDomain: ops.glasswall-ck8s-proxy.com
-  issuer: letsencrypt-staging
+  issuer: letsencrypt-prod
   verifyTls: false
   storageClass: ebs-gp2
   clusterDns: 10.43.0.10
