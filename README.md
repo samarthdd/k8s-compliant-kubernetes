@@ -26,7 +26,6 @@
 
 1. Deploy ck8s-cluster - follow the instructions in [README file](ck8s-cluster/README.md)
 
-
 2. Deploy compliantkubernetes-apps - follow the instructions in [README file](compliantkubernetes-apps/README.md)
 
 The Glasswall ICAP deployment is not fully automated yet, so you need to perform some manual actions listed below.
@@ -37,26 +36,26 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
         cd compliantkubernetes-apps
         ./bin/ck8s ops kubectl wc apply -f ../default-restricted-psp.yaml
 
-3. Create PVs
+4. Create PVs
 
         ./bin/ck8s ops kubectl wc apply -f ../local-storage-pv.yaml
 
-4. Create secret
+5. Create secret
 
         ./bin/ck8s ops kubectl wc create ns icap-adaptation
         ./bin/ck8s ops kubectl wc -n icap-adaptation create secret  generic transactionstoresecret \
         --from-literal=accountName=user \
         --from-literal=accountKey='key'
 
-5. Deploy Glasswall ICAP components:
+6. Deploy Glasswall ICAP components:
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
 
-6. Find the cluster IP address of icap-adaptaion service:
+7. Find the cluster IP address of icap-adaptaion service:
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation get svc icap-service -o jsonpath={.spec.clusterIP}
 
-7. Replace env var with the IP value
+8. Replace env var with the IP value
     The server url should be : icap://<ip_recorded above>:1344/gw_rebuild
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation edit deployment/glasswall-icap-nginx
