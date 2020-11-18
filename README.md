@@ -47,19 +47,27 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
         --from-literal=accountName=user \
         --from-literal=accountKey='key'
 
-6. Deploy Glasswall ICAP components:
+6. Create issuer
+
+        ./bin/ck8s ops kubectl wc apply -f ../icap_cert_issuer.yaml
+
+7. Deploy Glasswall ICAP components:
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
 
-7. Find the cluster IP address of icap-adaptaion service:
+8. Find the cluster IP address of icap-adaptaion service:
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation get svc icap-service -o jsonpath={.spec.clusterIP}
 
-8. Replace env var with the IP value
+9. Replace env var with the IP value
     The server url should be : icap://<ip_recorded above>:1344/gw_rebuild
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation edit deployment/glasswall-icap-nginx
         ./bin/ck8s ops kubectl wc -n icap-adaptation edit deployment/glasswall-icap-squid
+
+10. Edit ingress and add the `cert-manager.io/issuer: letsencrypt-prod` annotation.
+
+        ./bin/ck8s ops kubectl wc -n icap-adaptation edit ingress glasswall-icap-reverse-proxy-nginx
 
 ## Running ICAP
 
@@ -77,7 +85,7 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
 ## Delete ICAP deployment
 
-        ./bin/ck8s ops helmfile wc -f helmfile/02-glasswall-icap.yaml destroy
+        ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml destroy
         ./bin/ck8s ops kubectl wc delete pv local-pv-1 local-pv-2
 
 To force delete objects you can use:
