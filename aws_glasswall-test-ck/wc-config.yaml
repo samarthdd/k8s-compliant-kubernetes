@@ -219,9 +219,9 @@ issuers:
   letsencrypt:
     enabled: true
     prod:
-      email: set-me
+      email: jakub@elastisys.com
     staging:
-      email: set-me
+      email: jakub@elastisys.com
   extraIssuers: []
 certmanager:
   resources: {}

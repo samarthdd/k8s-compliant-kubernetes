@@ -14,11 +14,11 @@ s3:
   regionAddress: s3.us-west-1.amazonaws.com
   regionEndpoint: https://s3.us-west-1.amazonaws.com
   buckets:
-    harbor: "glasswall-test-harbor"
-    velero: "glasswall-test-velero"
-    elasticsearch: "glasswall-test-es-backup"
-    influxDB: "glasswall-test-influxdb"
-    scFluentd: "glasswall-test-sc-logs"
+    harbor: "glasswall-dev-harbor"
+    velero: "glasswall-dev-velero"
+    elasticsearch: "glasswall-dev-es-backup"
+    influxDB: "glasswall-dev-influxdb"
+    scFluentd: "glasswall-dev-sc-logs"
 user:
   namespaces:
     - demo1
@@ -218,9 +218,9 @@ issuers:
   letsencrypt:
     enabled: true
     prod:
-      email: "set-me"
+      email: jakub@elastisys.com
     staging:
-      email: "set-me"
+      email: jakub@elastisys.com
   extraIssuers: []
 certmanager:
   resources: {}
