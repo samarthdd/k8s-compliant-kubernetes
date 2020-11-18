@@ -39,15 +39,7 @@
     },
     "worker-0": {
       "node_type": "worker",
-      "size": "t3.xlarge",
-      "image": {
-        "name": "ami-0f94f08455a5f5ae9"
-      },
-      "provider_settings": null
-    },
-    "worker-1": {
-      "node_type": "worker",
-      "size": "t3.xlarge",
+      "size": "t3.2xlarge",
       "image": {
         "name": "ami-0f94f08455a5f5ae9"
       },
