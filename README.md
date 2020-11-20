@@ -94,3 +94,9 @@ To force delete objects you can use:
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation delete all --all
         ./bin/ck8s ops kubectl wc -n icap-adaptation delete pvc --all
+
+## Testing ICAP service
+
+To test the ICAP service run the following command:
+
+    c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.ck.glasswall-ck8s-proxy.com -p 80 -s gw_rebuild -o ./rebuilt.pdf
