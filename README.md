@@ -69,6 +69,8 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation edit ingress glasswall-icap-reverse-proxy-nginx
 
+11. Redeploy the Glasswall ICAP: destroy (see Delete ICAP deployment) and apply (repeat steps 4, 7-10).
+
 ## Running ICAP
 
 1. Add the following record in `/etc/hosts` file:
