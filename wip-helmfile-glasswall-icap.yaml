@@ -29,8 +29,8 @@ releases:
   chart: ./s-k8-proxy-rebuild/stable-src/chart
   version: 0.0.1
   missingFileHandler: Error
-  # values:
-  # - values/workload-cluster-psp-rbac.yaml.gotmpl
+  values:
+  - wip-helmfile-galsswall-icap.yaml.gotmpl
 
 - name: glasswall-icap-adaptation
   namespace: icap-adaptation
