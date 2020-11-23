@@ -95,8 +95,16 @@ To force delete objects you can use:
         ./bin/ck8s ops kubectl wc -n icap-adaptation delete all --all
         ./bin/ck8s ops kubectl wc -n icap-adaptation delete pvc --all
 
+## Expose ICAP service
+
+Create LoadBalancer type of service to expose `icap-service`:
+
+        ./bin/ck8s ops kubectl wc expose deployment mvp-icap-service --port=1344 --target-port=1344 --type=LoadBalancer -n icap-adaptation
+
+Create a CNAME record in AWS Hosted Zones to direct trafic to the created AWS Network Load Balancer.
+
 ## Testing ICAP service
 
 To test the ICAP service run the following command:
 
-    c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.ck.glasswall-ck8s-proxy.com -p 80 -s gw_rebuild -o ./rebuilt.pdf
+        c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf
