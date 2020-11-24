@@ -33,3 +33,6 @@
 [submodule "mvp-icap-service"]
 	path = mvp-icap-service
 	url = git@github.com:elastisys/mvp-icap-service.git
+[submodule "event-submission-service"]
+	path = event-submission-service
+	url = git@github.com:elastisys/event-submission-service.git
