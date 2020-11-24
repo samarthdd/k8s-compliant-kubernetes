@@ -30,3 +30,6 @@
 	path = k8-reverse-proxy
 	url = git@github.com:elastisys/k8-reverse-proxy.git
 	branch = develop
+[submodule "mvp-icap-service"]
+	path = mvp-icap-service
+	url = git@github.com:elastisys/mvp-icap-service.git
