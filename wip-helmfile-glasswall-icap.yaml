@@ -39,6 +39,8 @@ releases:
   chart: ./icap-infrastructure/adaptation
   version: 0.0.1
   missingFileHandler: Error
+  values:
+  - wip-helmfile-glasswall-icap-adaptation.yaml.gotmpl
 
 # - name: glasswall-icap-administration
 #   namespace: management-ui
