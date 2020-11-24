@@ -40,50 +40,13 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
         ./bin/ck8s ops kubectl wc apply -f ../local-storage-pv.yaml
 
-5. Create secret
+<!-- 5. Create issuer
 
-        ./bin/ck8s ops kubectl wc create ns icap-adaptation
-        ./bin/ck8s ops kubectl wc -n icap-adaptation create secret  generic transactionstoresecret \
-        --from-literal=accountName=user \
-        --from-literal=accountKey='key'
+        ./bin/ck8s ops kubectl wc apply -f ../icap_cert_issuer.yaml -->
 
-6. Create issuer
-
-        ./bin/ck8s ops kubectl wc apply -f ../icap_cert_issuer.yaml
-
-7. Deploy Glasswall ICAP components:
+5. Deploy Glasswall ICAP components:
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
-
-8. Find the cluster IP address of icap-adaptaion service:
-
-        ./bin/ck8s ops kubectl wc -n icap-adaptation get svc icap-service -o jsonpath={.spec.clusterIP}
-
-9. Replace env var with the IP value
-    The server url should be : icap://<ip_recorded above>:1344/gw_rebuild
-
-        ./bin/ck8s ops kubectl wc -n icap-adaptation edit deployment/glasswall-icap-nginx
-        ./bin/ck8s ops kubectl wc -n icap-adaptation edit deployment/glasswall-icap-squid
-
-10. Edit ingress and add the `cert-manager.io/issuer: letsencrypt-prod` annotation.
-
-        ./bin/ck8s ops kubectl wc -n icap-adaptation edit ingress glasswall-icap-reverse-proxy-nginx
-
-11. Redeploy the Glasswall ICAP: destroy (see Delete ICAP deployment) and apply (repeat steps 4, 7-10).
-
-## Running ICAP
-
-1. Add the following record in `/etc/hosts` file:
-
-        127.0.0.1       gov.uk.glasswall-ck8s-proxy.com www.gov.uk.glasswall-ck8s-proxy.com assets.publishing.service.gov.uk.glasswall-ck8s-proxy.com
-
-2. Forward `4443` port to the `icap-adaptation` service:
-
-        ./bin/ck8s ops kubectl wc -n icap-adaptation port-forward svc/glasswall-icap-reverse-proxy-nginx 4443:443
-
-3. Open a link to a selected resource in an internet browser, remember to use appropiate port, for example: https://www.gov.uk.glasswall-ck8s-proxy.com:4443/guidance/social-care-common-inspection-framework-sccif-voluntary-adoption-agencies/download-pdf-version
-
-    That should spawn a new pod in `icap-adaptation` namespace.
 
 ## Delete ICAP deployment
 

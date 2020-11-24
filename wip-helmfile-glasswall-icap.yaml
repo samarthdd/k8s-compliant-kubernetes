@@ -22,15 +22,15 @@ releases:
 #{{ if eq .Environment.Name "workload_cluster"  }}
 
 # Workload cluster PSP RBACs
-- name: glasswall-icap
-  namespace: icap-adaptation
-  labels:
-    app: workload-cluster-glasswall-icap
-  chart: ./s-k8-proxy-rebuild/stable-src/chart
-  version: 0.0.1
-  missingFileHandler: Error
-  values:
-  - wip-helmfile-glasswall-icap.yaml.gotmpl
+# - name: glasswall-icap
+#   namespace: icap-adaptation
+#   labels:
+#     app: workload-cluster-glasswall-icap
+#   chart: ./s-k8-proxy-rebuild/stable-src/chart
+#   version: 0.0.1
+#   missingFileHandler: Error
+#   values:
+#   - wip-helmfile-glasswall-icap.yaml.gotmpl
 
 - name: glasswall-icap-adaptation
   namespace: icap-adaptation
