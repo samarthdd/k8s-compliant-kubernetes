@@ -30,7 +30,7 @@ releases:
   version: 0.0.1
   missingFileHandler: Error
   values:
-  - wip-helmfile-galsswall-icap.yaml.gotmpl
+  - wip-helmfile-glasswall-icap.yaml.gotmpl
 
 - name: glasswall-icap-adaptation
   namespace: icap-adaptation
