@@ -20,7 +20,7 @@ adaptationservice:
   name: adaptation-service
   namespace: icap-adaptation
   replicas: 1
-  amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
+  amqpurl: "amqp://user:bitnami@rabbitmq-service:5672/"
   rolename: adaptation-service-role
 icapservice:
   name: mvp-icap-service
@@ -38,7 +38,7 @@ podjanitor:
 eventsubmissionservice:
   name: event-submission-service
   replicas: 1
-  amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
+  amqpurl: "amqp://user:bitnami@rabbitmq-service:5672/"
   existingSecret:
 imagestore:
   requestprocessing:
