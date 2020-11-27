@@ -36,22 +36,13 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
         cd compliantkubernetes-apps
         ./bin/ck8s ops kubectl wc apply -f ../default-restricted-psp.yaml
 
-4. Create PVs
-
-        ./bin/ck8s ops kubectl wc apply -f ../local-storage-pv.yaml
-
-<!-- 5. Create issuer
-
-        ./bin/ck8s ops kubectl wc apply -f ../icap_cert_issuer.yaml -->
-
-5. Deploy Glasswall ICAP components:
+4. Deploy Glasswall ICAP components:
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
 
 ## Delete ICAP deployment
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml destroy
-        ./bin/ck8s ops kubectl wc delete pv local-pv-1 local-pv-2
 
 To force delete objects you can use:
 
@@ -70,4 +61,4 @@ Create a CNAME record in AWS Hosted Zones to direct trafic to the created AWS Ne
 
 To test the ICAP service run the following command:
 
-        c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf
+        c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf -v
