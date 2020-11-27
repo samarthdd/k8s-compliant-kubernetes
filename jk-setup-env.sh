@@ -2,11 +2,11 @@
 
 pushd $(dirname $BASH_SOURCE)
 
-export CK8S_CONFIG_PATH=$(pwd)/aws_glasswall-test-jk
-export CK8S_CODE_PATH=$(pwd)/ck8s-cluster
+export CK8S_CONFIG_PATH=$(pwd)/aws_glasswall-kubespray-jk
+unset CK8S_CLOUD_PROVIDER
+
 export CK8S_PGP_FP=C23FDC9A49016B30199DDC86D1F9F9A9ABE5282B
-export CK8S_ENVIRONMENT_NAME=glasswall-test
-export CK8S_CLOUD_PROVIDER=aws
+export CK8S_ENVIRONMENT_NAME=glasswall-kubespray
 
 
 export GW_ICAP_ALLOWED_DOMAINS=gov.uk.glasswall-ck8s-proxy.com,www.gov.uk.glasswall-ck8s-proxy.com,assets.publishing.service.gov.uk.glasswall-ck8s-proxy.com
