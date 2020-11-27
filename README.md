@@ -44,7 +44,15 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
         ./bin/ck8s ops kubectl wc apply -f ../icap_cert_issuer.yaml -->
 
-5. Deploy Glasswall ICAP components:
+5. Create Self-signed TLS Certificate
+
+        openssl req -newkey rsa:2048 -nodes -keyout tls.key -x509 -days 365 -out certificate.crt
+
+6. Create TLS Certificate Secret
+
+        ./bin/ck8s ops kubectl wc -n icap-adaptation create secret tls icap-service-tls-config --namespace icap-adaptation --key tls.key --cert certificate.crt
+
+7. Deploy Glasswall ICAP components:
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
 
@@ -64,6 +72,8 @@ Create LoadBalancer type of service to expose `icap-service`:
 
         ./bin/ck8s ops kubectl wc expose deployment mvp-icap-service --port=1344 --target-port=1344 --type=LoadBalancer -n icap-adaptation
 
+        ./bin/ck8s ops kubectl wc expose deployment mvp-icap-service --port=1345 --target-port=1345 --type=LoadBalancer -n icap-adaptation
+
 Create a CNAME record in AWS Hosted Zones to direct trafic to the created AWS Network Load Balancer.
 
 ## Testing ICAP service
@@ -71,3 +81,11 @@ Create a CNAME record in AWS Hosted Zones to direct trafic to the created AWS Ne
 To test the ICAP service run the following command:
 
         c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf
+
+With TLS:
+
+        c-icap-client -i icap.glasswall-ck8s-proxy.com -p 1345 -tls -tls-method TLSv1_2 -tls-no-verify -s gw_rebuild -v -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -o ./rebuilt.pdf
+
+        docker run -it --rm -v /home/jakub/Downloads:/opt -v /home/jakub/Downloads:/home glasswallsolutions/c-icap-client:manual-v1 -s 'gw_rebuild' -i icap.glasswall-ck8s-proxy.com -p 1345 -tls -tls-method TLSv1_2 -tls-no-verify -f '/opt/FIVB_VB_Scoresheet_2013_updated2.pdf' -o '/opt/rebuilt.pdf' -v
+
+        docker run -it --rm -v /home/jakub/Downloads:/opt -v /home/jakub/Downloads:/home glasswallsolutions/c-icap-client:manual-v1 -s 'gw_rebuild' -i icap.glasswall-ck8s-proxy.com -p 1344 -f '/opt/FIVB_VB_Scoresheet_2013_updated2.pdf' -o '/opt/rebuilt.pdf' -v
