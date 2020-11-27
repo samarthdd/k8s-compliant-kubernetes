@@ -39,3 +39,6 @@
 [submodule "pod-janitor"]
 	path = pod-janitor
 	url = git@github.com:elastisys/pod-janitor.git
+[submodule "experiment-ck8s-metal"]
+	path = experiment-ck8s-metal
+	url = git@github.com:elastisys/experiment-ck8s-metal.git
