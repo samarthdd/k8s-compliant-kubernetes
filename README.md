@@ -1,42 +1,94 @@
 # gp-gov-uk-website
 
-## Build instructions
-
-1. Build `reverse-proxy-nginx` Docker image and push it to the Elastisys repository
-
-       docker build k8-reverse-proxy/stable-src/nginx -t elastisys/reverse-proxy-nginx:0.0.1
-       docker push elastisys/reverse-proxy-nginx:0.0.1
-
-2. Build `reverse-proxy-squid` Docker image and push it to the Elastisys repository
-
-       docker build k8-reverse-proxy/stable-src/squid/ -t elastisys/reverse-proxy-squid:0.0.1
-       docker push elastisys/reverse-proxy-squid:0.0.1
-
-3. Build `reverse-proxy-c-icap` Docker image and push it to the Elastisys repository
-
-        docker build k8-reverse-proxy/stable-src/c-icap -t elastisys/reverse-proxy-c-icap:0.0.1
-        docker push elastisys/reverse-proxy-c-icap:0.0.1
-
-4. Build `icap-request-processing` Docker image and push it to the Elastisys repository
-
-        docker build icap-request-processing -t elastisys/icap-request-processing:test
-        docker push elastisys/icap-request-processing:test
-
 ## Deployment instructions
 
-1. Deploy ck8s-cluster - follow the instructions in [README file](ck8s-cluster/README.md)
+### Create infrastructure
 
-2. Deploy compliantkubernetes-apps - follow the instructions in [README file](compliantkubernetes-apps/README.md)
+1. Source your environment file
 
-The Glasswall ICAP deployment is not fully automated yet, so you need to perform some manual actions listed below.
+        source jk-setup-env.sh
+
+2. Initialize kubespray environment:
+
+        cd experiment-ck8s-metal
+        ./bin/ck8s-kubespray init sc default ~/.ssh/id_rsa.pub
+        ./bin/ck8s-kubespray init wc default ~/.ssh/id_rsa.pub
+
+3. Move to the terraform tfe directory
+
+        cd ../ck8s-cluster/terraform/tfe
+
+4. Export TF variables
+
+        export TF_DATA_DIR=${CK8S_CONFIG_PATH}/.state/.terraform-tfe
+        export TF_STATE=${CK8S_CONFIG_PATH}/.state/terraform-tfe.tfstate
+        export TF_WORKSPACE=ck8s-aws-glasswall-kubespray-jk
+
+5. Create terraform workspace
+
+        terraform init
+        terraform apply -var organization=elastisys -var workspace_name=$TF_WORKSPACE
+
+6. Create ck8s service cluster in AWS
+
+        cd ../aws/
+
+        export TF_DATA_DIR=${CK8S_CONFIG_PATH}/.state/.terraform
+        export TF_VAR_aws_access_key=YOUR_ACCESS_KEY
+        export TF_VAR_aws_secret_key=YOUR_SECRET_KEY
+        export TF_VAR_dns_access_key=YOUR_ACCESS_KEY
+        export TF_VAR_dns_secret_key=YOUR_SECRET_KEY
+        export TF_VAR_ssh_pub_key_sc=~/.ssh/id_rsa.pub
+        export TF_VAR_ssh_pub_key_wc=
+        export TF_WORKSPACE=glasswall-dev
+
+        terraform init -backend-config ${CK8S_CONFIG_PATH}/backend_config.hcl
+
+        terraform apply -var-file ${CK8S_CONFIG_PATH}/tfvars.json -target module.service_cluster
+
+7. Create ck8s workload cluster in AWS
+
+        export TF_VAR_ssh_pub_key_sc=
+        export TF_VAR_ssh_pub_key_wc=~/.ssh/id_rsa.pub
+
+        terraform init -backend-config ${CK8S_CONFIG_PATH}/backend_config.hcl
+
+        terraform apply -var-file ${CK8S_CONFIG_PATH}/tfvars.json -target module.workload_cluster
+
+8. Update `inventory.ini` files in `sc-config` and `wc-config` directories by setting `ansible_host` value to IP of respective machine.
+
+### Install compliant kubernetes apps
+
+Run in `gp-gov-uk-website/experiment-ck8s-metal`
+
+1. Prepare the environment:
+
+        sudo apt-get install python3-venv
+        python3 -m venv venv
+        source venv/bin/activate
+
+2. Deploy Service Cluster:
+
+        ./bin/ck8s-kubespray apply sc
+
+3. Deploy Workload Cluster:
+
+        ./bin/ck8s-kubespray apply wc
+
+4. Exit python virtual environment
+
+        deactivate
+
+### Glasswall ICAP
+
 Also, Glasswall ICAP components require running as root, so some of the checks in the restricted PSP has to be relaxed.
 
-3. Relax PodSecurityPolicy:
+1. Relax PodSecurityPolicy:
 
         cd compliantkubernetes-apps
         ./bin/ck8s ops kubectl wc apply -f ../default-restricted-psp.yaml
 
-4. Deploy Glasswall ICAP components:
+2. Deploy Glasswall ICAP components:
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
 
