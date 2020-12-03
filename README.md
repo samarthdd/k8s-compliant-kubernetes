@@ -55,9 +55,9 @@
 
         terraform apply -var-file ${CK8S_CONFIG_PATH}/tfvars.json -target module.workload_cluster
 
-8. Update `inventory.ini` files in `sc-config` and `wc-config` directories by setting `ansible_host` value to IP of respective machine.
+8. Update `inventory.ini` files in `sc-config` and `wc-config` directories by setting `ansible_host` value to Public IP of respective machine.
 
-### Install compliant kubernetes apps
+### Install Kubernetes
 
 Run in `gp-gov-uk-website/experiment-ck8s-metal`
 
@@ -67,17 +67,30 @@ Run in `gp-gov-uk-website/experiment-ck8s-metal`
         python3 -m venv venv
         source venv/bin/activate
 
-2. Deploy Service Cluster:
+2. Set the value of `supplementary_addresses_in_ssl_keys` field in `*c-config/group_vars/k8s-cluster.yaml` to the Public IP of respective master nodes (workload and service clusters).
+
+3. Deploy Service Cluster:
 
         ./bin/ck8s-kubespray apply sc
 
-3. Deploy Workload Cluster:
+4. Deploy Workload Cluster:
 
         ./bin/ck8s-kubespray apply wc
 
-4. Exit python virtual environment
+5. Exit python virtual environment
 
         deactivate
+
+### Install Compliant Kubernetes
+
+Follow the instructions in [README file](compliantkubernetes-apps/README.md)
+
+export CK8S_CLOUD_PROVIDER=aws
+export CK8S_FLAVOR=dev
+export CK8S_CONFIG_PATH=~/workspace/glasswall/gp-gov-uk-website/aws_glasswall-kubespray-jk
+
+edit kube_config_sc.yaml and kube_config_wc.yaml
+set clusters.cluster.server to Public IPs
 
 ### Glasswall ICAP
 
