@@ -22,40 +22,72 @@
 
         export TF_DATA_DIR=${CK8S_CONFIG_PATH}/.state/.terraform-tfe
         export TF_STATE=${CK8S_CONFIG_PATH}/.state/terraform-tfe.tfstate
-        export TF_WORKSPACE=ck8s-aws-glasswall-kubespray-jk
+        export TF_WORKSPACE=ck8s-ovh-glasswall-kubespray-jk
 
 5. Create terraform workspace
 
         terraform init
         terraform apply -var organization=elastisys -var workspace_name=$TF_WORKSPACE
 
-6. Create ck8s service cluster in AWS
+6. Create ck8s service cluster in vSphere
 
-        cd ../aws/
+        cd ../vsphere/
+
+    Set kubespray configuration following the [official instructions](https://github.com/kubernetes-sigs/kubespray/blob/master/docs/vsphere.md)
 
         export TF_DATA_DIR=${CK8S_CONFIG_PATH}/.state/.terraform
-        export TF_VAR_aws_access_key=YOUR_ACCESS_KEY
-        export TF_VAR_aws_secret_key=YOUR_SECRET_KEY
-        export TF_VAR_dns_access_key=YOUR_ACCESS_KEY
-        export TF_VAR_dns_secret_key=YOUR_SECRET_KEY
-        export TF_VAR_ssh_pub_key_sc=~/.ssh/id_rsa.pub
-        export TF_VAR_ssh_pub_key_wc=
-        export TF_WORKSPACE=glasswall-dev
+        export TF_VAR_ssh_pub_key=~/.ssh/id_rsa.pub
+        export VSPHERE_USER=set-me
+        export VSPHERE_PASSWORD=set-me
+        export TF_WORKSPACE=glasswall-kubespray-jk
 
         terraform init -backend-config ${CK8S_CONFIG_PATH}/backend_config.hcl
 
-        terraform apply -var-file ${CK8S_CONFIG_PATH}/tfvars.json -target module.service_cluster
+        terraform apply -target module.service_cluster
 
-7. Create ck8s workload cluster in AWS
+7. Create ck8s workload cluster in vSphere
 
-        export TF_VAR_ssh_pub_key_sc=
-        export TF_VAR_ssh_pub_key_wc=~/.ssh/id_rsa.pub
-
-        terraform init -backend-config ${CK8S_CONFIG_PATH}/backend_config.hcl
-
-        terraform apply -var-file ${CK8S_CONFIG_PATH}/tfvars.json -target module.workload_cluster
+        terraform apply -target module.workload_cluster
 
 8. Update `inventory.ini` files in `sc-config` and `wc-config` directories by setting `ansible_host` value to Public IP of respective machine.
+
+### vSphere Storage Policy
+
+Create a Storage Policy following the instructions [here](https://github.com/kubernetes/cloud-provider-vsphere/blob/master/docs/book/tutorials/kubernetes-on-vsphere-with-kubeadm.md#create-a-storage-policy)
+
+1. Name and description
+
+    Name: `Space-Efficient`
+
+2. Policy structure
+
+    Select `Enable host based rules`
+
+3. Host based services
+
+    Encryption, select: `Disabled`
+
+    Storage I/O Control, select: `Normal IO share allocation`
+
+4. Storage compatibility
+
+    Make sure there is compatible storage available.
+
+5. Click `Finish`
+
+Configure VP Storage Policy for all the VMs:
+
+1. Select the VM
+
+2. Go to Configure tab
+
+3. Click `EDIT VM STORAGE POLICIES`
+
+4. Uncheck `Configure per disk` option
+
+5. Select `Space-Efficient` value in the `VM storage policy` drop-down menu
+
+6. Click `OK` button
 
 ### Install Kubernetes
 
@@ -63,8 +95,13 @@ Run in `gp-gov-uk-website/experiment-ck8s-metal`
 
 1. Prepare the environment:
 
+    First run:
+
         sudo apt-get install python3-venv
         python3 -m venv venv
+
+    Every run:
+
         source venv/bin/activate
 
 2. Set the value of `supplementary_addresses_in_ssl_keys` field in `*c-config/group_vars/k8s-cluster.yaml` to the Public IP of respective master nodes (workload and service clusters).
@@ -81,16 +118,27 @@ Run in `gp-gov-uk-website/experiment-ck8s-metal`
 
         deactivate
 
+### Create vSphere CSI Storage Class
+
+Run in `gp-gov-uk-website/compliantkubernetes-apps`
+
+        ./bin/ck8s ops kubectl sc create -f bootstrap/storageclass/manifests/vsphere-csi.yaml
+        ./bin/ck8s ops kubectl wc create -f bootstrap/storageclass/manifests/vsphere-csi.yaml
+
 ### Install Compliant Kubernetes
 
 Follow the instructions in [README file](compliantkubernetes-apps/README.md)
 
-export CK8S_CLOUD_PROVIDER=aws
-export CK8S_FLAVOR=dev
-export CK8S_CONFIG_PATH=~/workspace/glasswall/gp-gov-uk-website/aws_glasswall-kubespray-jk
+        export CK8S_CLOUD_PROVIDER=baremetal
+        export CK8S_FLAVOR=dev
+        export CK8S_CONFIG_PATH=~/workspace/glasswall/gp-gov-uk-website/ovh_glasswall-kubespray-jk
 
-edit kube_config_sc.yaml and kube_config_wc.yaml
-set clusters.cluster.server to Public IPs
+        ./bin/ck8s init
+
+Edit `kube_config_sc.yaml` and `kube_config_wc.yaml` and set `clusters.cluster.server` to Public IPs.
+
+        ./bin/ck8s apply sc
+        ./bin/ck8s apply wc
 
 ### Glasswall ICAP
 
