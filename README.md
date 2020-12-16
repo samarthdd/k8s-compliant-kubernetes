@@ -93,6 +93,8 @@ Configure VP Storage Policy for all the VMs:
 
 Run in `gp-gov-uk-website/experiment-ck8s-metal`
 
+    cd ../../../experiment-ck8s-metal
+
 1. Prepare the environment:
 
     First run:
@@ -122,6 +124,7 @@ Run in `gp-gov-uk-website/experiment-ck8s-metal`
 
 Run in `gp-gov-uk-website/compliantkubernetes-apps`
 
+        cd ../compliantkubernetes-apps
         ./bin/ck8s ops kubectl sc create -f bootstrap/storageclass/manifests/vsphere-csi.yaml
         ./bin/ck8s ops kubectl wc create -f bootstrap/storageclass/manifests/vsphere-csi.yaml
 
@@ -175,3 +178,27 @@ Create a CNAME record in AWS Hosted Zones to direct trafic to the created AWS Ne
 To test the ICAP service run the following command:
 
         c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf -v
+
+## Debugging
+
+Check if Public IPs are used in kubernetes config files:
+
+        sudo grep --recursive "51.89.210." /etc/kubernetes/manifests/
+
+Run kubectl within VM:
+
+        sudo -s
+        export KUBECONFIG=/etc/kubernetes/admin.conf
+        kubectl get pods -A
+
+        docker run --rm --name kubectl -v /etc/kubernetes/admin.conf:/.kube/config bitnami/kubectl:latest
+
+        docker run --rm -it -v /var/lib/cloud/instance:/workdir mikefarah/yq:3 yq r user-data.txt runcmd
+
+        sudo cat /var/lib/cloud/instance/user-data.txt
+
+        ./bin/ck8s ops kubectl wc patch daemonset fluentd-fluentd-elasticsearch -n fluentd --type merge --patch ../patch-fluentd-domain.yaml
+
+        ./bin/ck8s ops kubectl wc get daemonset fluentd-fluentd-elasticsearch -n fluentd -o yaml
+
+        ./bin/ck8s ops kubectl wc set env daemonset.apps/fluentd-fluentd-elasticsearch -n fluentd OUTPUT_HOST=elastic.ops.MY-NEW-DOMAIN.com
