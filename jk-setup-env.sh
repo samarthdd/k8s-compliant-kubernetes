@@ -2,11 +2,11 @@
 
 pushd $(dirname $BASH_SOURCE)
 
-export CK8S_CONFIG_PATH=$(pwd)/aws_glasswall-kubespray-jk
+export CK8S_CONFIG_PATH=$(pwd)/ovh_glasswall-kubespray-jk
 unset CK8S_CLOUD_PROVIDER
 
 export CK8S_PGP_FP=C23FDC9A49016B30199DDC86D1F9F9A9ABE5282B
-export CK8S_ENVIRONMENT_NAME=glasswall-kubespray
+export CK8S_ENVIRONMENT_NAME=glasswall-ovh-kubespray
 
 export CK8S_CODE_PATH=$(pwd)/ck8s-cluster
 
@@ -16,11 +16,6 @@ export S3_INFLUX_BUCKET_NAME=${CK8S_ENVIRONMENT_NAME}-influxdb
 export S3_SC_FLUENTD_BUCKET_NAME=${CK8S_ENVIRONMENT_NAME}-sc-logs
 export S3_VELERO_BUCKET_NAME=${CK8S_ENVIRONMENT_NAME}-velero
 
-export GW_ICAP_ALLOWED_DOMAINS=gov.uk.glasswall-ck8s-proxy.com,www.gov.uk.glasswall-ck8s-proxy.com,assets.publishing.service.gov.uk.glasswall-ck8s-proxy.com
-export GW_ICAP_ROOT_DOMAIN=glasswall-ck8s-proxy.com
-export GW_ICAP_SUBFILTER_ENV=".gov.uk,.gov.uk.glasswall-ck8s-proxy.com  .amazonaws.com,.amazonaws.com.gov.uk.glasswall-ck8s-proxy.com"
-export GW_ICAP_ADDITIONAL_HOST_0=www.gov.uk.glasswall-ck8s-proxy.com
-export GW_ICAP_ADDITIONAL_HOST_1=assets.publishing.service.gov.uk.glasswall-ck8s-proxy.com
-export GW_ICAP_URL=gov.uk.glasswall-ck8s-proxy.com
+source jk-secrets.sh
 
 popd
