@@ -120,13 +120,19 @@ Run in `gp-gov-uk-website/experiment-ck8s-metal`
 
         deactivate
 
-### Create vSphere CSI Storage Class
+### Create vSphere CSI Storage Class (service cluster)
 
 Run in `gp-gov-uk-website/compliantkubernetes-apps`
 
         cd ../compliantkubernetes-apps
         ./bin/ck8s ops kubectl sc create -f bootstrap/storageclass/manifests/vsphere-csi.yaml
-        ./bin/ck8s ops kubectl wc create -f bootstrap/storageclass/manifests/vsphere-csi.yaml
+
+### Create local storage PV (workload cluster)
+
+Run in `gp-gov-uk-website/compliantkubernetes-apps`
+
+        cd ../compliantkubernetes-apps
+        ./bin/ck8s ops kubectl wc apply -f ../local-storage-pv.yaml
 
 ### Install Compliant Kubernetes
 
