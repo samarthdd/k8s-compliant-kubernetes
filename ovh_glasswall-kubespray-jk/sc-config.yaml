@@ -2,31 +2,29 @@ global:
   ck8sVersion: any
   cloudProvider: baremetal
   clusterName: glasswall-ovh-kubespray-sc
-  baseDomain: ops.glasswall-ck8s-proxy.com
+  baseDomain: glasswall-ck8s-proxy.com
   opsDomain: ops.glasswall-ck8s-proxy.com
   issuer: letsencrypt-prod
   verifyTls: false
   storageClass: vsphere-csi
-  clusterDns: "10.43.0.10"
+  clusterDns: 10.43.0.10
 objectStorage:
   # Options are "s3", "gcs", or "none"
   # If "none", remember to disable features that depend on object storage:
   #   all backups (velero, harbor, influxdb, elasticsearch), sc logs (fluentd)
   #   Also set harbor persistence to "filesystem" or "swift"
   # Otherwise configure the features to match this type.
-  type: "s3"
-  # gcs:
-  #   project: "set-me"
+  type: s3
   s3:
-    region: "us-east-1"
-    regionAddress: "s3.us-east-1.amazonaws.com"
-    regionEndpoint: "https://s3.us-east-1.amazonaws.com"
+    region: us-east-1
+    regionAddress: s3.us-east-1.amazonaws.com
+    regionEndpoint: https://s3.us-east-1.amazonaws.com
   buckets:
-    harbor: "glasswall-ovh-kubespray-harbor"
-    velero: "glasswall-ovh-kubespray-velero"
-    elasticsearch: "glasswall-ovh-kubespray-es-backup"
-    influxDB: "glasswall-ovh-kubespray-influxdb"
-    scFluentd: "glasswall-ovh-kubespray-sc-logs"
+    harbor: glasswall-ovh-kubespray-harbor
+    velero: glasswall-ovh-kubespray-velero
+    elasticsearch: glasswall-ovh-kubespray-es-backup
+    influxDB: glasswall-ovh-kubespray-influxdb
+    scFluentd: glasswall-ovh-kubespray-sc-logs
 user:
   grafana:
     enabled: true
@@ -106,7 +104,7 @@ harbor:
     disableRedirect: false
   oidc:
     #group claim name used by OIDC Provider
-    groupClaimName: "set-me"
+    groupClaimName: set-me
     scope: openid,email,profile,offline_access,groups
   backup:
     enabled: true
@@ -182,11 +180,11 @@ elasticsearch:
     # Where to find roles
     roles_key: groups
     # Scope
-    scope: "openid profile email"
+    scope: openid profile email
   masterNode:
     count: 1
     storageSize: 1Gi
-    javaOpts: "-Xms512m -Xmx512m"
+    javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
         memory: 1024Mi
@@ -199,7 +197,7 @@ elasticsearch:
         preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
             podAffinityTerm:
-              topologyKey: "kubernetes.io/hostname"
+              topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
                   role: master
@@ -209,7 +207,7 @@ elasticsearch:
     count: 2
     storageSize: 18Gi
     storageClass: node-local
-    javaOpts: "-Xms512m -Xmx512m"
+    javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
         memory: 1024Mi
@@ -222,7 +220,7 @@ elasticsearch:
         preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
             podAffinityTerm:
-              topologyKey: "kubernetes.io/hostname"
+              topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
                   role: data
@@ -230,7 +228,7 @@ elasticsearch:
     nodeSelector: {}
   clientNode:
     count: 1
-    javaOpts: "-Xms512m -Xmx512m"
+    javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
         memory: 1024Mi
@@ -243,7 +241,7 @@ elasticsearch:
         preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
             podAffinityTerm:
-              topologyKey: "kubernetes.io/hostname"
+              topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
                   role: client
@@ -288,8 +286,8 @@ elasticsearch:
     min: 7
     max: 14
     ageSeconds: 864000
-    retentionSchedule: "0 1 * * *" # 1am
-    backupSchedule: "0 */12 * * *" # run twice/day
+    retentionSchedule: 0 1 * * * # 1am
+    backupSchedule: 0 */12 * * * # run twice/day
   extraRoles: []
   # - role_name: log_reader
   #   definition:
@@ -381,7 +379,7 @@ influxDB:
     durationSC: 3d
   backup:
     enabled: true
-    schedule: "0 0 * * *"
+    schedule: 0 0 * * *
     startingDeadlineSeconds: 200
     resources:
       requests:
@@ -393,7 +391,7 @@ influxDB:
   backupRetention:
     enabled: true
     daysToRetain: 7
-    schedule: "0 0 * * *"
+    schedule: 0 0 * * *
     startingDeadlineSeconds: 200
     resources:
       requests:
@@ -406,12 +404,12 @@ alerts:
   alertTo: "null"
   opsGenieHeartbeat:
     enabled: false
-    url: "https://api.eu.opsgenie.com/v2/heartbeats"
-    name: "set-me"
+    url: https://api.eu.opsgenie.com/v2/heartbeats
+    name: set-me
   slack:
-    channel: "set-me"
+    channel: set-me
   opsGenie:
-    apiUrl: "https://api.eu.opsgenie.com"
+    apiUrl: https://api.eu.opsgenie.com
 ck8sdash:
   enabled: true
   tolerations: []
@@ -436,7 +434,7 @@ ck8sdash:
 externalTrafficPolicy:
   local: false
   whitelistRange:
-    global: "0.0.0.0/0"
+    global: 0.0.0.0/0
     ck8sdash: false
     dex: false
     kibana: false
@@ -467,9 +465,9 @@ ingressNginx:
     #   cpu: 100m
     #   memory: 64Mi
     tolerations:
-      - key: "nodeType"
-        operator: "Exists"
-        effect: "NoSchedule"
+      - key: nodeType
+        operator: Exists
+        effect: NoSchedule
     affinity: {}
     nodeSelector: {}
     config:
@@ -477,8 +475,8 @@ ingressNginx:
     useHostPort: true
     service:
       enabled: false
-      type: "set-me"
-      annotations: "set-me"
+      type: set-me
+      annotations: set-me
     # Will add custom configuration options to Nginx https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
     additionalConfig: {}
   defaultBackend:
@@ -491,10 +489,10 @@ ingressNginx:
     #   cpu: 100m
     #   memory: 64Mi
     tolerations:
-      - key: "nodeType"
-        operator: "Equal"
-        value: "elastisys"
-        effect: "NoSchedule"
+      - key: nodeType
+        operator: Equal
+        value: elastisys
+        effect: NoSchedule
     affinity: {}
     nodeSelector: {}
 velero:
@@ -525,9 +523,9 @@ issuers:
   letsencrypt:
     enabled: true
     prod:
-      email: "jakub@elastisys.com"
+      email: jakub@elastisys.com
     staging:
-      email: "jakub@elastisys.com"
+      email: jakub@elastisys.com
   extraIssuers: []
 certmanager:
   resources: {}
