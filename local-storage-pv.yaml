@@ -4,45 +4,10 @@ metadata:
   name: local-pv-1
 spec:
   capacity:
-    storage: 1Gi
+    storage: 3Gi
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
+  storageClassName: node-local
   hostPath:
-    path: "/mnt/data"
-  # local:
-  #   path: /mnt/disks/vol1
-  # nodeAffinity:
-  #   required:
-  #     nodeSelectorTerms:
-  #     - matchExpressions:
-  #       - key: kubernetes.io/hostname
-  #         operator: In
-  #         values:
-  #         - my-node
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: local-pv-2
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-  - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  hostPath:
-    path: "/mnt/data"
-  # local:
-  #   path: /mnt/disks/vol1
-  # nodeAffinity:
-  #   required:
-  #     nodeSelectorTerms:
-  #     - matchExpressions:
-  #       - key: kubernetes.io/hostname
-  #         operator: In
-  #         values:
-  #         - my-node
-
+    path: "/mnt/disks"
