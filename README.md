@@ -148,8 +148,6 @@ Follow the instructions in [README file](compliantkubernetes-apps/README.md)
 
         ./bin/ck8s init
 
-Edit `kube_config_sc.yaml` and `kube_config_wc.yaml` and set `clusters.cluster.server` to Public IPs.
-
         ./bin/ck8s apply sc
         ./bin/ck8s apply wc
 
