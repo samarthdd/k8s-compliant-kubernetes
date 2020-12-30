@@ -120,6 +120,10 @@ Run in `gp-gov-uk-website/experiment-ck8s-metal`
 
         deactivate
 
+### Fix IPs in kubeconfig files
+
+Edit `kube_config_sc.yaml` and `kube_config_wc.yaml` and set `clusters.cluster.server` to Public IPs.
+
 ### Create vSphere CSI Storage Class (service cluster)
 
 Run in `gp-gov-uk-website/compliantkubernetes-apps`
