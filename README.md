@@ -151,6 +151,12 @@ Follow the instructions in [README file](compliantkubernetes-apps/README.md)
         ./bin/ck8s apply sc
         ./bin/ck8s apply wc
 
+### Fix directory ownership
+
+In the VM run command:
+
+        sudo chown -R 1000:1000 /mnt/disks/
+
 ### Glasswall ICAP
 
 Also, Glasswall ICAP components require running as root, so some of the checks in the restricted PSP has to be relaxed.
