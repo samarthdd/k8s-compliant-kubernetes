@@ -193,6 +193,25 @@ To test the ICAP service run the following command:
 
         c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf -v
 
+## Update ICAP request processing
+
+cd ../icap-request-processing/
+
+Download the newest version of Glasswall Rebuild SDK from https://github.com/filetrust/sdk-rebuild-eval
+
+https://github.com/filetrust/sdk-rebuild-eval/raw/master/libs/rebuild/linux/libglasswall.classic.so
+https://github.com/filetrust/sdk-rebuild-eval/raw/master/libs/rebuild/windows/glasswall.classic.dll
+
+place the file in respective folders
+
+        lib/linux/SDK/
+        lib/windows/SDK/
+
+Rebuild the Docker image and push to the repository
+
+        docker build . -t elastisys/icap-request-processing:runasroot
+        docker push elastisys/icap-request-processing:runasroot
+
 ## Debugging
 
 Check if Public IPs are used in kubernetes config files:
