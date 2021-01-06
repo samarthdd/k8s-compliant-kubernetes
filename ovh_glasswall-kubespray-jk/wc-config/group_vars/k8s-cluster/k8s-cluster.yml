@@ -716,3 +716,5 @@ enable_nat_default_gateway: true
 # Extra variables that passing to launch.sh, useful for enabling seed mode, see
 # https://www.weave.works/docs/net/latest/tasks/ipam/ipam/
 # weave_extra_args: ~
+
+kube_apiserver_node_port_range: "1344-32767"
