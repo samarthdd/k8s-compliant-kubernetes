@@ -124,6 +124,11 @@ Run in `gp-gov-uk-website/experiment-ck8s-metal`
 
 Edit `kube_config_sc.yaml` and `kube_config_wc.yaml` and set `clusters.cluster.server` to Public IPs.
 
+        cd ../ovh_glasswall-kubespray-jk/
+        sops -i -d .state/kube_config_wc.yaml
+        vi .state/kube_config_wc.yaml
+        sops -i -e .state/kube_config_wc.yaml
+
 ### Create vSphere CSI Storage Class (service cluster)
 
 Run in `gp-gov-uk-website/compliantkubernetes-apps`
@@ -170,6 +175,22 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
 
+3. Delete `frontend-icap-lb` service
+
+        ./bin/ck8s ops kubectl wc delete service frontend-icap-lb -n icap-adaptation
+
+4. Edit `icap-service` and set `nodePort` to `1344`
+
+        ./bin/ck8s ops kubectl wc edit service/icap-service -n icap-adaptation
+
+5. Make sure that record in AWS Hosted Zones are configured properly.
+
+## Testing ICAP service
+
+To test the ICAP service run the following command:
+
+        c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf -v
+
 ## Delete ICAP deployment
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml destroy
@@ -178,20 +199,6 @@ To force delete objects you can use:
 
         ./bin/ck8s ops kubectl wc -n icap-adaptation delete all --all
         ./bin/ck8s ops kubectl wc -n icap-adaptation delete pvc --all
-
-## Expose ICAP service
-
-Create LoadBalancer type of service to expose `icap-service`:
-
-        ./bin/ck8s ops kubectl wc expose deployment mvp-icap-service --port=1344 --target-port=1344 --type=LoadBalancer -n icap-adaptation
-
-Create a CNAME record in AWS Hosted Zones to direct trafic to the created AWS Network Load Balancer.
-
-## Testing ICAP service
-
-To test the ICAP service run the following command:
-
-        c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf -v
 
 ## Update ICAP request processing
 
