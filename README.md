@@ -175,21 +175,33 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
         ./bin/ck8s ops helmfile wc -f ../wip-helmfile-glasswall-icap.yaml apply
 
-3. Delete `frontend-icap-lb` service
+3. Create TLS key pair
+
+        openssl req -newkey rsa:2048 -nodes -keyout tls.key -x509 -days 365 -out certificate.crt
+
+4. Upload the TLS key pair
+
+        ./bin/ck8s ops kubectl wc create secret tls icap-service-tls-config --namespace icap-adaptation --key tls.key --cert certificate.crt
+
+5. Delete `frontend-icap-lb` service
 
         ./bin/ck8s ops kubectl wc delete service frontend-icap-lb -n icap-adaptation
 
-4. Edit `icap-service` and set `nodePort` to `1344`
+6. Edit `icap-service` and set `nodePort` values to `1344` and `1345` respectively
 
         ./bin/ck8s ops kubectl wc edit service/icap-service -n icap-adaptation
 
-5. Make sure that record in AWS Hosted Zones are configured properly.
+7. Make sure that record in AWS Hosted Zones are configured properly.
 
 ## Testing ICAP service
 
 To test the ICAP service run the following command:
 
         c-icap-client -f /home/jakub/Downloads/FIVB_VB_Scoresheet_2013_updated2.pdf -i icap.glasswall-ck8s-proxy.com -p 1344 -s gw_rebuild -o ./rebuilt.pdf -v
+
+To test the ICAP service with TLS run the following command:
+
+        docker run -it --rm -v /home/jakub/Downloads:/opt -v /home/jakub/Downloads:/home glasswallsolutions/c-icap-client:manual-v1 -s 'gw_rebuild' -i icap-149.glasswall-ck8s-proxy.com -p 1345 -tls -tls-method TLSv1_2 -tls-no-verify -f '/opt/FIVB_VB_Scoresheet_2013_updated2.pdf' -o '/opt/rebuilt.pdf' -v
 
 ## Delete ICAP deployment
 
