@@ -22,7 +22,7 @@
 
         export TF_DATA_DIR=${CK8S_CONFIG_PATH}/.state/.terraform-tfe
         export TF_STATE=${CK8S_CONFIG_PATH}/.state/terraform-tfe.tfstate
-        export TF_WORKSPACE=ck8s-ovh-glasswall-kubespray-jk
+        export TF_WORKSPACE=ck8s-ovh-glasswall-kubespray-jk-149
 
 5. Create terraform workspace
 
@@ -39,7 +39,7 @@
         export TF_VAR_ssh_pub_key=~/.ssh/id_rsa.pub
         export VSPHERE_USER=set-me
         export VSPHERE_PASSWORD=set-me
-        export TF_WORKSPACE=glasswall-kubespray-jk
+        export TF_WORKSPACE=glasswall-kubespray-jk-149
 
         terraform init -backend-config ${CK8S_CONFIG_PATH}/backend_config.hcl
 
