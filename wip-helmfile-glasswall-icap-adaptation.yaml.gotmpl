@@ -1,32 +1,51 @@
 environment:
 serviceAccount:
   adaptationname: adaptation-service-sa
+  archiveadaptationname: archive-adaptation-service-sa
+  policyupdatename: policy-update-service-sa
   janitorname: pod-janitor-sa
 volumemountpath:
   source: "/var/source"
   target: "/var/target"
 queue:
+  messagebrokeruser: ""
+  messagebrokerpassword: ""
   host:
-    url: "rabbitmq-service"
-    port: "\"5672\""
-    #rabbitUserName is the name of the secret where the RabbitMQ user name is stored for conntecting with the message broker.
-    #rabbitPassword is the name of the secret where the RabbitMQ password is stored for conntecting with the message broker.
+    url: "rabbitmq-service" # this should be deprecated in preference to queue specific hostname
+    port: "\"5672\"" # this should be deprecated in preference to queue specific port
   adaptationRequest:
     exchangename: "adaptation-exchange"
     requestqueuename: "adaptation-request-queue"
     replyqueuename: "amq.rabbitmq.reply-to"
     messagename: "adaptation-request"
+    hostname: "rabbitmq-service"
+    port: "\"5672\""
+  archiveadaptationrequest:
+    hostname: "rabbitmq-service"
+    port: "\"5672\""
+  transactionevent:
+    hostname: "rabbitmq-service"
+    port: "\"5672\""
 adaptationservice:
   name: adaptation-service
   namespace: icap-adaptation
   replicas: 1
   amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
   rolename: adaptation-service-role
+archiveadaptationservice:
+  name: archive-adaptation-service
+  namespace: icap-adaptation
+  replicas: 1
+  amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
+  exchange: adaptation-exchange
+  rolename: archive-adaptation-service-role
 icapservice:
   name: mvp-icap-service
   applabel: adaptation
   replicas: 1
   port: 1344
+  tlsport: 1345
+  enableFileId: false
 icapserviceconfig:
   processingtimeoutduration: 00:01:00
 podjanitor:
@@ -39,20 +58,46 @@ eventsubmissionservice:
   name: event-submission-service
   replicas: 1
   amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
-  existingSecret:
+  existingSecret: transactionstoresecret
+policyupdateservice:
+  name: policy-update-service
+  applabel: policyupdate
+  replicas: 1
+  port: 10000
+  rolename: policy-update-service-role
+  existingSecret: policyupdateservicesecret
+requestprocessingservice:
+  configmapname: request-processing-config
 imagestore:
   requestprocessing:
+    registry: ""
     repository: elastisys/icap-request-processing
-    tag: runasroot
+    tag: runasroot-updated
   adaptationservice:
-    repository: elastisys/icap-adaptation-service
-    tag: runasroot
+    registry: ""
+    repository: glasswallsolutions/icap-adaptation-service
+    tag: main-1d8a40a
   podjanitor:
-    repository: elastisys/pod-janitor
-    tag: runasroot
+    registry: ""
+    repository: glasswallsolutions/pod-janitor
+    tag: main-5ce5e69
   icapservice:
-    repository: elastisys/mvp-icap-service
-    tag: runasroot
+    registry: ""
+    repository: glasswallsolutions/mvp-icap-service
+    tag: main-6b50b16
   eventsubmission:
-    repository: elastisys/event-submission-service
-    tag: runasroot
+    registry: ""
+    repository: glasswallsolutions/event-submission-service
+    tag: main-e243149
+  policyupdate:
+    registry: ""
+    repository: glasswallsolutions/policy-update-service
+    tag: main-697495a
+  archiveadaptationservice:
+    registry: ""
+    repository: glasswallsolutions/archive-adaptation-service
+    tag: main-928c171
+  archiveprocessingservice:
+    registry: ""
+    repository: glasswallsolutions/archive-processing-service
+    tag: main-77832a9

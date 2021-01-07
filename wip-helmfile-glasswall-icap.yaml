@@ -42,6 +42,14 @@ releases:
   values:
   - wip-helmfile-glasswall-icap-adaptation.yaml.gotmpl
 
+- name: glasswall-rabbitmq
+  namespace: icap-adaptation
+  labels:
+    app: workload-cluster-glasswall-rabbitmq
+  chart: ./icap-infrastructure/rabbitmq
+  version: 0.0.1
+  missingFileHandler: Error
+
 # - name: glasswall-icap-administration
 #   namespace: management-ui
 #   labels:
