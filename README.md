@@ -178,6 +178,9 @@ Also, Glasswall ICAP components require running as root, so some of the checks i
 
 7. Make sure that record in AWS Hosted Zones are configured properly.
 
+It takes approximately 3-4 minutes for `adaptation-service`, `archive-adaptation-service`, and `event-submission-service` to settle in `Running` state.
+Meanwhile they will restart several times (approximately 5 times) and be in `CrashLoopBackOff` and `Error` states.
+
 ## Testing ICAP service
 
 To test the ICAP service run the following command:
