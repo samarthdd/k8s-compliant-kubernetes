@@ -42,3 +42,6 @@
 [submodule "experiment-ck8s-metal"]
 	path = experiment-ck8s-metal
 	url = git@github.com:elastisys/experiment-ck8s-metal.git
+[submodule "compliantkubernetes-kubespray"]
+	path = compliantkubernetes-kubespray
+	url = git@github.com:elastisys/compliantkubernetes-kubespray.git
