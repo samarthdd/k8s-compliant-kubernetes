@@ -10,7 +10,7 @@
 
 2. Initialize kubespray environment:
 
-        cd experiment-ck8s-metal
+        cd compliantkubernetes-kubespray
         ./bin/ck8s-kubespray init sc default ~/.ssh/id_rsa.pub
         ./bin/ck8s-kubespray init wc default ~/.ssh/id_rsa.pub
 
@@ -91,34 +91,19 @@ Configure VP Storage Policy for all the VMs:
 
 ### Install Kubernetes
 
-Run in `gp-gov-uk-website/experiment-ck8s-metal`
+Run in `gp-gov-uk-website/compliantkubernetes-kubespray`
 
-    cd ../../../experiment-ck8s-metal
+    cd ../../../compliantkubernetes-kubespray
 
-1. Prepare the environment:
+1. Set the value of `supplementary_addresses_in_ssl_keys` field in `*c-config/group_vars/k8s-cluster.yaml` to the Public IP of respective master nodes (workload and service clusters).
 
-    First run:
-
-        sudo apt-get install python3-venv
-        python3 -m venv venv
-
-    Every run:
-
-        source venv/bin/activate
-
-2. Set the value of `supplementary_addresses_in_ssl_keys` field in `*c-config/group_vars/k8s-cluster.yaml` to the Public IP of respective master nodes (workload and service clusters).
-
-3. Deploy Service Cluster:
+2. Deploy Service Cluster:
 
         ./bin/ck8s-kubespray apply sc
 
-4. Deploy Workload Cluster:
+3. Deploy Workload Cluster:
 
         ./bin/ck8s-kubespray apply wc
-
-5. Exit python virtual environment
-
-        deactivate
 
 ### Fix IPs in kubeconfig files
 
