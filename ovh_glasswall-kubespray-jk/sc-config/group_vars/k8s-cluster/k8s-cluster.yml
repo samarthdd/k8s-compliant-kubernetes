@@ -554,7 +554,7 @@ macvlan_interface: eth1
 enable_nat_default_gateway: true
 # see roles/network_plugin/weave/defaults/main.yml
 supplementary_addresses_in_ssl_keys:
-- 51.89.210.145
+- 51.89.210.153
 # Weave's network password for encryption, if null then no network encryption.
 # weave_password: ~
 # If set to 1, disable checking for new Weave Net versions (default is blank,
