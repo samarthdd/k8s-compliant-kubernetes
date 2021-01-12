@@ -206,7 +206,7 @@ elasticsearch:
   dataNode:
     count: 2
     storageSize: 18Gi
-    storageClass: node-local
+    storageClass: vsphere-csi
     javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
