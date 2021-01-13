@@ -21,10 +21,7 @@ objectStorage:
         regionAddress: s3.us-east-1.amazonaws.com
         regionEndpoint: https://s3.us-east-1.amazonaws.com
 user:
-    namespaces:
-    - demo1
-    - demo2
-    - demo3
+    namespaces: []
     adminUsers:
     - admin@example.com
     alertmanager:
