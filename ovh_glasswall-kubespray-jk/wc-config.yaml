@@ -121,7 +121,7 @@ fluentd:
         affinity: {}
         nodeSelector: {}
 ck8sdash:
-    enabled: true
+    enabled: false
     tolerations: []
     affinity: {}
     nodeSelector: {}
