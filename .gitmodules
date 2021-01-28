@@ -42,3 +42,6 @@
 [submodule "compliantkubernetes-kubespray"]
 	path = compliantkubernetes-kubespray
 	url = git@github.com:elastisys/compliantkubernetes-kubespray.git
+[submodule "vmware-scripts"]
+	path = vmware-scripts
+	url = git@github.com:elastisys/vmware-scripts.git
