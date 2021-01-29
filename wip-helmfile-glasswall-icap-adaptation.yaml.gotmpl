@@ -1,4 +1,11 @@
 environment:
+rabbitmqService:
+  name: rabbitmq-service
+  port: 5672
+  managementPort: 15672
+  component: rabbitmq
+  app: taskQueue
+  key: rabbitmq-cluster-operator
 serviceAccount:
   adaptationname: adaptation-service-sa
   archiveadaptationname: archive-adaptation-service-sa
@@ -7,9 +14,10 @@ serviceAccount:
 volumemountpath:
   source: "/var/source"
   target: "/var/target"
+  transactions: /mnt/transactions
+prometheus:
+  metricsport: 8080
 queue:
-  messagebrokeruser: ""
-  messagebrokerpassword: ""
   host:
     url: "rabbitmq-service" # this should be deprecated in preference to queue specific hostname
     port: "\"5672\"" # this should be deprecated in preference to queue specific port
@@ -28,7 +36,6 @@ queue:
     port: "\"5672\""
 adaptationservice:
   name: adaptation-service
-  namespace: icap-adaptation
   replicas: 1
   amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
   rolename: adaptation-service-role
@@ -45,7 +52,7 @@ icapservice:
   replicas: 1
   port: 1344
   tlsport: 1345
-  enableFileId: false
+  enableFileId: true
 icapserviceconfig:
   processingtimeoutduration: 00:01:00
 podjanitor:
@@ -57,8 +64,7 @@ podjanitor:
 eventsubmissionservice:
   name: event-submission-service
   replicas: 1
-  amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
-  existingSecret: transactionstoresecret
+  amqpurl: "" # this should be deprecated in preference to queue specific hostname
 policyupdateservice:
   name: policy-update-service
   applabel: policyupdate
@@ -68,36 +74,89 @@ policyupdateservice:
   existingSecret: policyupdateservicesecret
 requestprocessingservice:
   configmapname: request-processing-config
+  cpulimit: 1
+  cpurequest: 0.2
+  memorylimit: 10000Mi
+  memoryrequest: 250Mi
+transactionqueryservice:
+  fullnameOverride: transaction-query-service
+  replicaCount: 1
+  imagePullSecrets: []
+  service:
+    type: ClusterIP
+    port: 443
+  deployment:
+    containerPort: 443
+  probes:
+    enabled: false
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    tls: []
+  volumes:
+    transactionstore:
+      shareName: transactions
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+transactionstore:
+  shareName: transactions
+  storage: 3Gi
 imagestore:
   requestprocessing:
     registry: ""
     repository: elastisys/icap-request-processing
-    tag: runasroot-updated
+    tag: v0.2
   adaptationservice:
     registry: ""
-    repository: glasswallsolutions/icap-adaptation-service
-    tag: main-1d8a40a
+    repository: elastisys/icap-adaptation-service
+    tag: v0.2
   podjanitor:
     registry: ""
     repository: glasswallsolutions/pod-janitor
-    tag: main-5ce5e69
+    tag: develop-dd4c0f8
   icapservice:
     registry: ""
     repository: glasswallsolutions/mvp-icap-service
-    tag: main-6b50b16
+    tag: develop-7cfec20
   eventsubmission:
     registry: ""
     repository: glasswallsolutions/event-submission-service
-    tag: main-e243149
+    tag: develop-1f75835
   policyupdate:
     registry: ""
     repository: glasswallsolutions/policy-update-service
-    tag: main-697495a
+    tag: develop-ba3016f
   archiveadaptationservice:
     registry: ""
     repository: glasswallsolutions/archive-adaptation-service
-    tag: main-928c171
+    tag: develop-5b883e3
   archiveprocessingservice:
     registry: ""
     repository: glasswallsolutions/archive-processing-service
-    tag: main-77832a9
+    tag: develop-897191b
+  transactionqueryservice:
+    registry: ""
+    repository: glasswallsolutions/transaction-query-service
+    tag: develop-2cc1cbf
+secrets:
+  containerregistry:
+    dockerconfigjson: "<<https://gw-icap-keyvault.vault.azure.net/secrets/az-registry-dockerconfig>>"
+  transactionqueryservice:
+    transactionqueryservicesecret:
+      username: "guest"
+      password: "guest"
+  policyupdateservice:
+    policyupdateservicesecret:
+      username: "<<https://gw-tfstate-Vault.vault.azure.net/secrets/policyUpdateServiceUsername>>"
+      password: "<<https://gw-tfstate-Vault.vault.azure.net/secrets/policyUpdateServicePassword>>"
+  transactionstore:
+    transactionstoresecret:
+      accountname: "guest"
+      accountkey: "guest"
+  mvpicapservice:
+    tls:
+      tlsCert: "<<https://gw-tfstate-Vault.vault.azure.net/secrets/mvpicapserviceTlsCert>>"
+      tlsKey: "<<https://gw-tfstate-Vault.vault.azure.net/secrets/mvpicapserviceTlsKey>>"
