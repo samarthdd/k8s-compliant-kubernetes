@@ -1,6 +1,5 @@
 #!/bin/bash
 
-export GNUPGHOME="$(mktemp -d)"
 cat >pipeline_key_config <<EOF
      %echo Generating a basic OpenPGP key
      %no-protection
