@@ -98,6 +98,7 @@ jobs:
         PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json aws-ami.json
 
     - name: Delete temporary SSH key
+      if: always()
       run: |
         aws ec2 delete-key-pair --key-name "packer-glasswall-elastisys-pipeline"
 
