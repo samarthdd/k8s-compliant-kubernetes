@@ -13,9 +13,6 @@
 [submodule "icap-infrastructure"]
 	path = icap-infrastructure
 	url = git@github.com:elastisys/icap-infrastructure.git
-[submodule "s-k8-proxy-rebuild"]
-	path = s-k8-proxy-rebuild
-	url = git@github.com:elastisys/s-k8-proxy-rebuild.git
 [submodule "icap-management-ui"]
 	path = icap-management-ui
 	url = git@github.com:elastisys/icap-management-ui.git
