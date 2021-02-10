@@ -25,7 +25,7 @@ on:
         default: "true"
         required: true
   push:
-    branches: [ main ]
+    branches: [ packer-aws ]
     paths-ignore:
       - 'aws_glasswal-kubespray-jk'
       - 'aws_glasswal-test-ck'
