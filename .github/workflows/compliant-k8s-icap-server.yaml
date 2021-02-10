@@ -40,7 +40,7 @@ on:
       - 'mvp-icap-service'
       - 'pod-jenitor'
       - 's-k8-proxy-rebuild'
-      - 's-k8-proxy-rebuild/*'
+      - 's-k8-proxy-rebuild/quickstart'
       - '.github/workflows/proxy-rebuild-ova.yaml'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
