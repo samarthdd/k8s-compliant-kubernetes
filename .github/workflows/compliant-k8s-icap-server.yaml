@@ -84,7 +84,7 @@ jobs:
       run: |
         # sudo pip install --upgrade sops
         go version
-        go get -u go.mozilla.org/sops/cmd/sops
+        sudo go get -u go.mozilla.org/sops/cmd/sops
         sops --version
 
     # build artifact
