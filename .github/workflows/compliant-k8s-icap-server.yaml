@@ -82,9 +82,8 @@ jobs:
 
     - name: Setup SOPS
       run: |
-        # sudo pip install --upgrade sops
-        go version
-        sudo go get -u go.mozilla.org/sops/cmd/sops
+        curl https://github.com/mozilla/sops/releases/download/v3.6.1/sops-v3.6.1.linux
+        sudo mv sops-v3.6.1.linux /usr/local/bin/sops
         sops --version
 
     # build artifact
