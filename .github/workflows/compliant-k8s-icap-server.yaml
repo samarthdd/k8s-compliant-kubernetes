@@ -72,6 +72,12 @@ jobs:
       run: |
         sudo apt install pwgen
 
+    - name: Setup PIP
+      run: |
+        sudo apt update
+        sudo apt install python3-pip
+        pip3 --version
+
     - name: Setup SOPS
       run: |
         sudo pip install --upgrade sops
