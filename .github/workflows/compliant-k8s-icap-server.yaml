@@ -77,7 +77,10 @@ jobs:
         sudo apt update
         sudo apt install python3-pip
         pip3 --version
-        sudo apt-get install python3-setuptools
+        sudo apt-get install build-essential libssl-dev libffi-dev cargo
+        sudo apt install snapd
+        sudo snap install rustup --classic
+        sudo rustup default stable
 
     - name: Setup SOPS
       run: |
