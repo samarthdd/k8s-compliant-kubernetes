@@ -110,11 +110,8 @@ jobs:
         AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
       run: |
         cd vmware-scripts/packer
-        echo ${GITHUB_SHA}
         export SHA8=${GITHUB_SHA::8}
-        echo ${SHA8}
-        pip list
-        pip3 list
+        mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
         PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json aws-ami.json
 
     - name: Delete temporary SSH key
