@@ -84,6 +84,7 @@ jobs:
       run: |
         sudo curl -L -o sops https://github.com/mozilla/sops/releases/download/v3.6.1/sops-v3.6.1.linux
         sudo mv sops /usr/local/bin
+        sudo chmod a+x /usr/local/bin/sops
         sops --version
 
     # build artifact
