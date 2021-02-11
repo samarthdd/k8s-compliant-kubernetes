@@ -80,6 +80,11 @@ jobs:
         sudo pip3 install setuptools-rust setuptools
         sudo -H pip install setuptools
 
+    - name: Setup compliantkubernetes-apps requirements
+      run: |
+        cd compliantkubernetes-apps
+        ansible-playbook -e 'ansible_python_interpreter=/usr/bin/python3' --ask-become-pass --connection local --inventory 127.0.0.1, get-requirements.yaml
+
     - name: Setup SOPS
       run: |
         sudo curl -L -o sops https://github.com/mozilla/sops/releases/download/v3.6.1/sops-v3.6.1.linux
