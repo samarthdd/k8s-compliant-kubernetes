@@ -82,7 +82,7 @@ jobs:
 
     - name: Setup SOPS
       run: |
-        curl -L -o sops https://github.com/mozilla/sops/releases/download/v3.6.1/sops-v3.6.1.linux
+        sudo curl -L -o sops https://github.com/mozilla/sops/releases/download/v3.6.1/sops-v3.6.1.linux
         sudo mv sops /usr/local/bin
         sops --version
 
