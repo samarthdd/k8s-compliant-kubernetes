@@ -78,6 +78,7 @@ jobs:
         sudo apt install python3-pip
         pip3 --version
         sudo pip3 install setuptools-rust setuptools
+        sudo pip install setuptools-rust setuptools
 
     - name: Setup SOPS
       run: |
@@ -109,6 +110,8 @@ jobs:
         echo ${GITHUB_SHA}
         export SHA8=${GITHUB_SHA::8}
         echo ${SHA8}
+        pip list
+        pip3 list
         PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json aws-ami.json
 
     - name: Delete temporary SSH key
