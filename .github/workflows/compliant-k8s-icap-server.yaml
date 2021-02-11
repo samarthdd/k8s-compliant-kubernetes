@@ -78,7 +78,7 @@ jobs:
         sudo apt install python3-pip
         pip3 --version
         sudo pip3 install setuptools-rust setuptools
-        sudo -H pip install setuptools-rust setuptools
+        sudo -H pip install setuptools
 
     - name: Setup SOPS
       run: |
