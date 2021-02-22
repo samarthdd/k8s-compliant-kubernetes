@@ -32,6 +32,7 @@ objectStorage:
         regionAddress: s3.eu-west-1.amazonaws.com
         regionEndpoint: https://s3.eu-west-1.amazonaws.com
 user:
+    createNamespaces: true
     namespaces:
     - icap-adaptation
     adminUsers:
@@ -62,6 +63,18 @@ falco:
         priority: notice
         hostPort: http://kube-prometheus-stack-alertmanager.monitoring:9093
         # if type=slack falco.alerts.slackWebhook must be set in the secrets yaml file
+    falcoSidekick:
+        resources:
+        limits:
+            cpu: 20m
+            memory: 50Mi
+        requests:
+            cpu: 10m
+            memory: 25Mi
+
+        tolerations: []
+        affinity: {}
+        nodeSelector: {}
 prometheus:
     remoteWrite:
         user: wcWriter
@@ -159,6 +172,8 @@ externalTrafficPolicy:
         global: 0.0.0.0/0
         ck8sdash: false
 nfsProvisioner:
+    server: "set-me"
+    path: /nfs
     resources:
         limits:
             cpu: 100m
