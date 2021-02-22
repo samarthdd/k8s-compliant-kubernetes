@@ -43,7 +43,7 @@ user:
         ingress:
             enabled: false
 falco:
-    enabled: false
+    enabled: true
     resources:
         limits:
             cpu: 200m
