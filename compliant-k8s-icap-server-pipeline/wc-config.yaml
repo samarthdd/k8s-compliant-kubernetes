@@ -8,6 +8,17 @@ global:
     verifyTls: false
     storageClass: node-local
     clusterDns: 10.43.0.10
+storageClasses:
+  default: local-storage
+  nfs:
+    enabled: false
+  cinder:
+    enabled: false
+  local:
+    enabled: true
+  ebs:
+    enabled: false
+
 objectStorage:
     type: s3
     buckets:
@@ -31,7 +42,7 @@ user:
         ingress:
             enabled: false
 falco:
-    enabled: true
+    enabled: false
     resources:
         limits:
             cpu: 200m
@@ -220,6 +231,7 @@ velero:
 issuers:
     letsencrypt:
         enabled: true
+        namespaces: []
         prod:
             email: jakub@elastisys.com
         staging:
