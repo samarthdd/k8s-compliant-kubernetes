@@ -55,61 +55,87 @@ user:
       enabled: false
 harbor:
   enabled: true
+  # The tolerations, affinity, and nodeSelector are applied to all harbor pods.
   tolerations: []
   affinity: {}
   nodeSelector: {}
   chartmuseum:
     persistentVolumeClaim:
       size: 5Gi
+    resources:
+      requests:
+        memory: 16Mi
+        cpu: 5m
   core:
     resources:
       requests:
-        memory: 256Mi
-        cpu: 100m
-      limits:
-        memory: 512Mi
-        cpu: 200m
+        memory: 64Mi
+        cpu: 10m
   database:
     persistentVolumeClaim:
       size: 1Gi
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: 250m
   jobservice:
     persistentVolumeClaim:
       size: 1Gi
     resources:
       requests:
-        memory: 256Mi
-        cpu: 100m
-      limits:
-        memory: 512Mi
-        cpu: 200m
+        memory: 64Mi
+        cpu: 10m
   registry:
     persistentVolumeClaim:
       size: 5Gi
     resources:
       requests:
-        memory: 256Mi
-        cpu: 100m
-      limits:
-        memory: 512Mi
-        cpu: 200m
+        memory: 64Mi
+        cpu: 10m
+    controller:
+      resources:
+        requests:
+          memory: 16Mi
+          cpu: 1m
   redis:
     persistentVolumeClaim:
       size: 1Gi
+    resources:
+      requests:
+        memory: 32Mi
+        cpu: 10m
   notary:
     resources:
       requests:
-        memory: 256Mi
-        cpu: 100m
-      limits:
-        memory: 512Mi
+        memory: 16Mi
+        cpu: 5m
+  notarySigner:
+    resources:
+      requests:
+        memory: 16Mi
+        cpu: 5m
+  portal:
+    resources:
+      requests:
+        memory: 16Mi
+        cpu: 5m
+  trivy:
+    persistentVolumeClaim:
+      size: 5Gi
+    resources:
+      requests:
         cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 1024Mi
   persistence:
     # Valid options are "filesystem" (persistent volume), "swift", or "objectStorage" (matching global config)
-    type: objectStorage
-    disableRedirect: false
+    type: "set-me"
+    disableRedirect: set-me
   oidc:
     #group claim name used by OIDC Provider
-    groupClaimName: set-me
+    groupClaimName: "set-me"
     scope: openid,email,profile,offline_access,groups
   backup:
     enabled: true
@@ -151,6 +177,7 @@ dex:
   oidcProvider: google
   allowedDomains:
     - example.com
+  additionalKubeloginRedirects: []    
   enableStaticLogin: true
   resources:
     limits:
@@ -189,6 +216,10 @@ elasticsearch:
   masterNode:
     count: 1
     storageSize: 1Gi
+    ## If null, no storageclass is specified in pvc and default storageClass is used
+    ## if the DefaultStorageClass admission plugin is enabled.
+    ## If "-", "" will be used as storageClassName.
+    storageClass: null
     javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
@@ -209,6 +240,9 @@ elasticsearch:
     tolerations: []
     nodeSelector: {}
   dataNode:
+    ## Enables dedicated statefulset for data nodes.
+    ## If false, master nodes will assume data role.
+    dedicatedPods: true
     count: 2
     storageSize: 18Gi
     storageClass: vsphere-csi
@@ -311,6 +345,9 @@ elasticsearch:
   defaultTemplates: true
   additionalTemplates: {}
   exporter:
+    serviceMonitor:
+      interval: 30s
+      scrapeTimeout: 30s
     resources: {}
     #   requests:
     #     cpu: 100m
@@ -323,17 +360,18 @@ fluentd:
   # Enable log collection in the service cluster
   # and store in object storage via fluentd aggregator.
   enabled: true
-  resources:
-    limits:
-      cpu: 500m
-      memory: 200Mi
-    requests:
-      cpu: 100m
-      memory: 200Mi
-  tolerations: []
-  affinity: {}
-  nodeSelector: {}
-  useRegionEndpoint: false
+  forwarder:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 200Mi
+      requests:
+        cpu: 100m
+        memory: 200Mi
+    tolerations: []
+    affinity: {}
+    nodeSelector: {}
+    useRegionEndpoint: false
   aggregator:
     resources:
       limits:
