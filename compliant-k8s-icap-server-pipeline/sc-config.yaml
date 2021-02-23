@@ -266,6 +266,9 @@ elasticsearch:
     tolerations: []
     nodeSelector: {}
   clientNode:
+    ## Enables dedicated deployment for client/ingest nodes.
+    ## If false, master nodes will assume client/ingest roles
+    dedicatedPods: true
     count: 1
     javaOpts: -Xms512m -Xmx512m
     resources:
