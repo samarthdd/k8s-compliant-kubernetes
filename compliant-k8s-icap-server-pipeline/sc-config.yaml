@@ -54,7 +54,7 @@ user:
     ingress:
       enabled: false
 harbor:
-  enabled: true
+  enabled: false
   # The tolerations, affinity, and nodeSelector are applied to all harbor pods.
   tolerations: []
   affinity: {}
@@ -131,7 +131,7 @@ harbor:
         memory: 1024Mi
   persistence:
     # Valid options are "filesystem" (persistent volume), "swift", or "objectStorage" (matching global config)
-    type: "set-me"
+    type: filesystem
     disableRedirect: set-me
   oidc:
     #group claim name used by OIDC Provider
