@@ -114,6 +114,8 @@ jobs:
         aws ec2 import-key-pair --key-name "packer-glasswall-elastisys-pipeline" --public-key-material fileb://temp_ssh_key.pub
         mkdir -p ../../compliant-k8s-icap-server-pipeline/wc-config/ssh
         cp temp_ssh_key ../../compliant-k8s-icap-server-pipeline/wc-config/ssh/id_rsa
+        mkdir -p ../../compliant-k8s-icap-server-pipeline/sc-config/ssh
+        cp temp_ssh_key ../../compliant-k8s-icap-server-pipeline/sc-config/ssh/id_rsa
 
     - name: Build Service Cluster AMI
       env:
