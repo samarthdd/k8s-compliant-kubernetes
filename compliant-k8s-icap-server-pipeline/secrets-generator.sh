@@ -43,7 +43,7 @@ alerts:
     opsGenie:
         apiKey: $(pwgen $PW_LENGTH 1)
 dex:
-    staticPassword: $(pwgen 60 1)
+    staticPassword: $(htpasswd -bnBC 10 "" $(pwgen $PW_LENGTH 1) | tr -d ':\n')
     googleClientID: null
     googleClientSecret: null
     oktaClientID: null
