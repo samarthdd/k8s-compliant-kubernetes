@@ -4,9 +4,8 @@ global:
     clusterName: CLUSTER_NAME
     baseDomain: icap-aws.glasswall-ck8s-proxy.com
     opsDomain: ops.glasswall-ck8s-proxy.com
-    issuer: letsencrypt-prod
+    issuer: letsencrypt-staging
     verifyTls: false
-    storageClass: node-local
     clusterDns: 10.43.0.10
 storageClasses:
   default: local-storage
@@ -15,11 +14,11 @@ storageClasses:
   cinder:
     enabled: false
   local:
-    enabled: true
+    enabled: false
   ebs:
     enabled: false
 objectStorage:
-    type: s3
+    type: none
     buckets:
         harbor: compliant-k8s-icap-server-pipeline-harbor
         velero: compliant-k8s-icap-server-pipeline-velero
@@ -215,11 +214,11 @@ elasticsearch:
     scope: openid profile email
   masterNode:
     count: 1
-    storageSize: 1Gi
+    storageSize: 20Gi
     ## If null, no storageclass is specified in pvc and default storageClass is used
     ## if the DefaultStorageClass admission plugin is enabled.
     ## If "-", "" will be used as storageClassName.
-    storageClass: null
+    storageClass: local-storage
     javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
@@ -242,10 +241,10 @@ elasticsearch:
   dataNode:
     ## Enables dedicated statefulset for data nodes.
     ## If false, master nodes will assume data role.
-    dedicatedPods: true
+    dedicatedPods: false
     count: 2
     storageSize: 18Gi
-    storageClass: vsphere-csi
+    storageClass: local-storage
     javaOpts: -Xms512m -Xmx512m
     resources:
       requests:
@@ -268,7 +267,7 @@ elasticsearch:
   clientNode:
     ## Enables dedicated deployment for client/ingest nodes.
     ## If false, master nodes will assume client/ingest roles
-    dedicatedPods: true
+    dedicatedPods: false
     count: 1
     javaOpts: -Xms512m -Xmx512m
     resources:
@@ -291,7 +290,7 @@ elasticsearch:
     nodeSelector: {}
   # Config for https://www.elastic.co/guide/en/elasticsearch/client/curator/5.8/about.html
   curator:
-    enabled: true
+    enabled: false
     resources:
       limits:
         cpu: 100m
@@ -324,7 +323,7 @@ elasticsearch:
     additionalPolicies: {}
   # Snapshot and snapshot lifecycle configuration
   snapshot:
-    enabled: true
+    enabled: false
     min: 7
     max: 14
     ageSeconds: 864000
@@ -362,7 +361,7 @@ elasticsearch:
 fluentd:
   # Enable log collection in the service cluster
   # and store in object storage via fluentd aggregator.
-  enabled: true
+  enabled: false
   forwarder:
     resources:
       limits:
@@ -403,7 +402,7 @@ influxDB:
       memory: 8Gi
       cpu: 2
   persistence:
-    size: 100Gi
+    size: 20Gi
   tolerations: []
   affinity: {}
   nodeSelector: {}
@@ -424,7 +423,7 @@ influxDB:
     durationWC: 5d
     durationSC: 5d
   backup:
-    enabled: true
+    enabled: false
     schedule: 0 0 * * *
     startingDeadlineSeconds: 200
     resources:
@@ -435,7 +434,7 @@ influxDB:
         cpu: 250m
         memory: 300Mi
   backupRetention:
-    enabled: true
+    enabled: false
     daysToRetain: 7
     schedule: 0 0 * * *
     startingDeadlineSeconds: 200
@@ -523,7 +522,7 @@ ingressNginx:
     affinity: {}
     nodeSelector: {}
 velero:
-  enabled: true
+  enabled: false
   tolerations: []
   nodeSelector: {}
   resources:
@@ -548,7 +547,7 @@ restore:
   veleroBackupName: latest
 issuers:
   letsencrypt:
-    enabled: true
+    enabled: false
     namespaces: []
     prod:
       email: jakub@elastisys.com
