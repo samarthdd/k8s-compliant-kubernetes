@@ -1,6 +1,9 @@
 #!/bin/bash
 
 PW_LENGTH=12
+ELASTICSEARCH_ADMIN_PASSWD=$(pwgen $PW_LENGTH 1)
+ELASTICSEARCH_CONFIGURER_PASSWD=$(pwgen $PW_LENGTH 1)
+ELASTICSEARCH_KIBANA_PASSWD=$(pwgen $PW_LENGTH 1)
 
 cat <<EOF > secrets.yaml
 objectStorage:
@@ -24,13 +27,13 @@ influxDB:
         wcWriterPassword: $(pwgen $PW_LENGTH 1)
         scWriterPassword: $(pwgen $PW_LENGTH 1)
 elasticsearch:
-    adminPassword: $(pwgen $PW_LENGTH 1)
-    adminHash: $(openssl passwd -5 $(pwgen 12 1))
+    adminPassword: ${ELASTICSEARCH_ADMIN_PASSWD}
+    adminHash: $(htpasswd -bnBC 10 "" ${ELASTICSEARCH_ADMIN_PASSWD} | tr -d ':\n')
     clientSecret: $(pwgen $PW_LENGTH 1)
-    configurerPassword: $(pwgen $PW_LENGTH 1)
-    configurerHash: $(openssl passwd -5 $(pwgen 12 1))
-    kibanaPassword: $(pwgen $PW_LENGTH 1)
-    kibanaHash: $(openssl passwd -5 $(pwgen 12 1))
+    configurerPassword: ${ELASTICSEARCH_CONFIGURER_PASSWD}
+    configurerHash: $(htpasswd -bnBC 10 "" ${ELASTICSEARCH_CONFIGURER_PASSWD} | tr -d ':\n')
+    kibanaPassword: ${ELASTICSEARCH_KIBANA_PASSWD}
+    kibanaHash: $(htpasswd -bnBC 10 "" ${ELASTICSEARCH_KIBANA_PASSWD} | tr -d ':\n')
     fluentdPassword: $(pwgen $PW_LENGTH 1)
     curatorPassword: $(pwgen $PW_LENGTH 1)
     snapshotterPassword: $(pwgen $PW_LENGTH 1)
