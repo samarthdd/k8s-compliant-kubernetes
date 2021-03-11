@@ -6,7 +6,7 @@ global:
     opsDomain: ops.glasswall-ck8s-proxy.com
     issuer: letsencrypt-prod
     verifyTls: false
-    storageClass: node-local
+    # storageClass: node-local
     clusterDns: 10.43.0.10
 storageClasses:
   default: local-storage
@@ -20,7 +20,7 @@ storageClasses:
     enabled: false
 
 objectStorage:
-    type: s3
+    type: none
     buckets:
         harbor: compliant-k8s-icap-server-pipeline-harbor
         velero: compliant-k8s-icap-server-pipeline-velero
