@@ -9,9 +9,6 @@
 [submodule "icap-infrastructure"]
 	path = icap-infrastructure
 	url = git@github.com:elastisys/icap-infrastructure.git
-[submodule "icap-management-ui"]
-	path = icap-management-ui
-	url = git@github.com:elastisys/icap-management-ui.git
 [submodule "icap-request-processing"]
 	path = icap-request-processing
 	url = git@github.com:elastisys/icap-request-processing.git
