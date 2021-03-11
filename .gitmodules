@@ -9,9 +9,6 @@
 [submodule "icap-infrastructure"]
 	path = icap-infrastructure
 	url = git@github.com:elastisys/icap-infrastructure.git
-[submodule "mvp-icap-service"]
-	path = mvp-icap-service
-	url = git@github.com:elastisys/mvp-icap-service.git
 [submodule "pod-janitor"]
 	path = pod-janitor
 	url = git@github.com:elastisys/pod-janitor.git
