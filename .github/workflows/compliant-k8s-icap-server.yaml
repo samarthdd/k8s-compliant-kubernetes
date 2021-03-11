@@ -115,6 +115,7 @@ jobs:
       run: |
         cd compliant-k8s-icap-server-pipeline
         ./secrets-generator.sh
+        cat secrets.yaml # FOR DEBUG, TO BE REMOVED
 
     - name: Encrypt CK8s secrets and ssh keys
       env:
