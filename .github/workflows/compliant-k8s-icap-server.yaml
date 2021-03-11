@@ -119,6 +119,7 @@ jobs:
     - name: Encrypt CK8s secrets and ssh keys
       run: |
         cd compliant-k8s-icap-server-pipeline
+        export GNUPGHOME=$(cat gnupghome.txt)
         sops -i -e secrets.yaml
         sops -i -e wc-config/ssh/id_rsa
         sops -i -e sc-config/ssh/id_rsa
