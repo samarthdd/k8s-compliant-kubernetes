@@ -1,3 +1,0 @@
-etcd_deployment_type: docker
-etcd_extra_vars:
-  listen-metrics-urls: "http://0.0.0.0:4001"
