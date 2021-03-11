@@ -6,7 +6,6 @@ global:
     opsDomain: ops.glasswall-ck8s-proxy.com
     issuer: letsencrypt-prod
     verifyTls: false
-    # storageClass: node-local
     clusterDns: 10.43.0.10
 storageClasses:
   default: local-storage
@@ -224,7 +223,7 @@ ingressNginx:
         affinity: {}
         nodeSelector: {}
 velero:
-    enabled: true
+    enabled: false
     tolerations: []
     nodeSelector: {}
     resources:
