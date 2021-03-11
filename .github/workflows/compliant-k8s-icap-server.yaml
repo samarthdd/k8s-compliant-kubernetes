@@ -108,7 +108,7 @@ jobs:
       run: |
         cd compliant-k8s-icap-server-pipeline
         export GNUPGHOME=$(mktemp -d)
-        echo $GNUPGHOME > gnupghome.txt
+        echo "GNUPGHOME=$GNUPGHOME" >> $GITHUB_ENV
         ./pgp-generator.sh
 
     - name: Generate CK8s secrets
@@ -117,9 +117,10 @@ jobs:
         ./secrets-generator.sh
 
     - name: Encrypt CK8s secrets and ssh keys
+      env:
+        GNUPGHOME: ${{ env.GNUPGHOME }}
       run: |
         cd compliant-k8s-icap-server-pipeline
-        export GNUPGHOME=$(cat gnupghome.txt)
         sops -i -e secrets.yaml
         sops -i -e wc-config/ssh/id_rsa
         sops -i -e sc-config/ssh/id_rsa
@@ -132,6 +133,7 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
+        GNUPGHOME: ${{ env.GNUPGHOME }}
       run: |
         cd vmware-scripts/packer
         export SHA8=${GITHUB_SHA::8}
@@ -146,6 +148,7 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
+        GNUPGHOME: ${{ env.GNUPGHOME }}
       run: |
         cd vmware-scripts/packer
         export SHA8=${GITHUB_SHA::8}
