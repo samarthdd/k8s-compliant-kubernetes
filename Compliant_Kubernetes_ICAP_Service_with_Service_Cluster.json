@@ -9,22 +9,20 @@
         },
         "MonitoringPassword": {
             "Type": "String",
-            "Default": "oMei5ohVog2i",
             "Description": "Enter monitoring password (plain text)"
         },
         "LoggingPassword": {
             "Type": "String",
-            "Default": "YXV3ZWlwaG80b29CCg==",
             "Description": "Enter logging password (Base64 encoded)"
         },
         "WorkloadClusterAmiId": {
             "Type": "String",
-            "Default": "ami-010f8f3077f91149a",
+            "Default": "ami-0ccdabcd14b6f54b6",
             "Description": "Enter AMI ID"
         },
         "ServiceClusterAmiId": {
             "Type": "String",
-            "Default": "ami-051bf535a2426f76b",
+            "Default": "ami-0275af96c5c94fdbe",
             "Description": "Enter AMI ID"
         },
         "WorkloadClusterInstanceSize": {
@@ -39,7 +37,6 @@
         },
         "KeyName": {
             "Type": "String",
-            "Default": "packer-glasswall-elastisys",
             "Description": "Enter SSH Key pair Name"
         },
         "ElasticIp": {
