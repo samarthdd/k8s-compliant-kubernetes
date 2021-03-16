@@ -32,16 +32,20 @@ Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json` CloudFormation
 
 * Click on one of the buttons above depending on the region you want to work on
 * When prompted with the image below, click Next
+  ![Screenshot from 2021-03-16 17-04-13](https://user-images.githubusercontent.com/7603614/111343283-92631b00-867b-11eb-9ebd-707869012ca5.png)
 
-Set values for:
+* Set values for:
 
-* `KeyName`
-* `LoggingPassword`
-* `MonitoringPassword`
+    * `KeyName`
+    * `LoggingPassword`
+    * `MonitoringPassword`
 
-You may also change the number of Workload clusters:
+  You may also want to change the number of Workload clusters:
 
-* `WorkloadClusterInstanceCount`
+    * `WorkloadClusterInstanceCount`
+
+  ![Screenshot from 2021-03-16 17-05-24](https://user-images.githubusercontent.com/7603614/111343544-d22a0280-867b-11eb-9c38-5fef9a6010e8.png)
+
 
 ### Service cluster (Production version)
 
