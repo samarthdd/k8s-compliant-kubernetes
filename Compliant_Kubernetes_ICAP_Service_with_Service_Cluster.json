@@ -524,8 +524,8 @@
                                     "Ref": "LoggingPassword"
                                 },
                                 "\n",
-                                "  domain: test.compliantkuberetes\n",
-                                "  service-cluster: ops.test.compliantkuberetes\n"
+                                "  domain: default.compliantkuberetes\n",
+                                "  service-cluster: ops.default.compliantkuberetes\n"
                             ]
                         ]
                     }
@@ -609,9 +609,9 @@
             "Type": "AWS::Route53::HostedZone",
             "Properties": {
                 "HostedZoneConfig": {
-                    "Comment": "test.compliantkuberetes"
+                    "Comment": "default.compliantkuberetes"
                 },
-                "Name": "test.compliantkuberetes",
+                "Name": "default.compliantkuberetes",
                 "VPCs": [
                     {
                         "VPCId": {
@@ -686,8 +686,8 @@
                                     "Ref": "LoggingPassword"
                                 },
                                 "\n",
-                                "  domain: test.compliantkuberetes\n",
-                                "  service-cluster: ops.test.compliantkuberetes\n"
+                                "  domain: default.compliantkuberetes\n",
+                                "  service-cluster: ops.default.compliantkuberetes\n"
                             ]
                         ]
                     }
@@ -707,7 +707,7 @@
                 },
                 "RecordSets": [
                     {
-                        "Name": "*.test.compliantkuberetes",
+                        "Name": "*.default.compliantkuberetes",
                         "Type": "A",
                         "TTL": "900",
                         "ResourceRecords": [
@@ -720,7 +720,7 @@
                         ]
                     },
                     {
-                        "Name": "*.ops.test.compliantkuberetes",
+                        "Name": "*.ops.default.compliantkuberetes",
                         "Type": "A",
                         "TTL": "900",
                         "ResourceRecords": [

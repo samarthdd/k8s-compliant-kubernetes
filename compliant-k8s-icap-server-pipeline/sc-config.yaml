@@ -2,8 +2,8 @@ global:
     ck8sVersion: any
     cloudProvider: baremetal
     clusterName: CLUSTER_NAME
-    baseDomain: icap-aws.glasswall-ck8s-proxy.com
-    opsDomain: ops.glasswall-ck8s-proxy.com
+    baseDomain: default.compliantkuberetes
+    opsDomain: ops.default.compliantkuberetes
     issuer: letsencrypt-staging
     verifyTls: false
     clusterDns: 10.43.0.10
