@@ -108,7 +108,7 @@
         "IcapRequestProcessingImage": {
             "Description": "Docker image for icap-request-processing",
             "Type": "String",
-            "Default": "elastisys/icap-request-processing:v0.2",
+            "Default": "elastisys/icap-request-processing:v0.2.1",
             "ConstraintDescription": "must be a valid image localtion."
         }
     },
