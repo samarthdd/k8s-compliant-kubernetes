@@ -7,13 +7,28 @@
 
 ## Deployment instructions
 
-In this document we describe how to deploy Compliant Kubernetes setup on VMware vSphere.
+In this document we describe how to deploy Compliant Kubernetes setup on AWS.
 
-Workload and service clusters serve different purposes, are deployed at different frequencies and have different expected lifetimes. Therefore, they are deployed in different ways.
+Workload and service clusters serve different purposes, are deployed at different frequencies and have different expected lifetimes.
+Therefore, they are deployed in different ways.
 
-Service cluster is deployed using several scripts, including Terraform, Kubespray and Helm.
+**Workload cluster** is deployed from an AMI, which is automatically created in by GitHub Actions using Packer.
+Amazon EC2 Launch Template and CloudFormation Template are provided to facilitate configuration of the deployment.
 
-Workload cluster is delivered as an OVA, constructed in an automatic fashion by Packer, and can be privisioned 
+Procution version of **Service cluster** is deployed from scratch using several scripts, including Terraform, Kubespray and Helm.
+
+An additonal version of **Service cluster**, suitable for the development environment, is available as an AMI.
+An instance of this version can be privisioned using Amazon EC2 Launch Template.
+
+### Workload cluster
+
+### Workload and Service cluster (Development version)
+
+Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json` CloudFormation template to deploy a number of Workload Clusters and a single Service Cluster.
+
+### Service cluster (Production version)
+
+## OLD CONTENT
 
 ### Initialize the environment
 
