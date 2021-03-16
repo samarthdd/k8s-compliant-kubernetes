@@ -572,7 +572,7 @@
                     },
                     {
                         "Key": "Owner",
-                        "Value": "IcapCloudFormation",
+                        "Value": "jakub@elastisys.com",
                         "PropagateAtLaunch": true
                     },
                     {
@@ -582,12 +582,12 @@
                     },
                     {
                         "Key": "Team",
-                        "Value": "K8-CF",
+                        "Value": "Elastisys",
                         "PropagateAtLaunch": true
                     },
                     {
                         "Key": "Scope",
-                        "Value": "Stack created using CloudFormation scripts",
+                        "Value": "k8s-compliant-kubernetes",
                         "PropagateAtLaunch": true
                     },
                     {
@@ -653,6 +653,36 @@
                             "VolumeSize": {
                                 "Ref": "ServiceClusterEc2RootVolumeSize"
                             }
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Ref": "TagName"
+                        }
+                    },
+                    {
+                        "Key": "Owner",
+                        "Value": "jakub@elastisys.com"
+                    },
+                    {
+                        "Key": "Delete",
+                        "Value": "No"
+                    },
+                    {
+                        "Key": "Team",
+                        "Value": "Elastisys"
+                    },
+                    {
+                        "Key": "Scope",
+                        "Value": "k8s-compliant-kubernetes"
+                    },
+                    {
+                        "Key": "CFStack",
+                        "Value": {
+                            "Ref": "AWS::StackId"
                         }
                     }
                 ],
