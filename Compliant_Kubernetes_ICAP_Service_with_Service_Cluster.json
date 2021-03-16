@@ -17,12 +17,12 @@
         },
         "WorkloadClusterAmiId": {
             "Type": "String",
-            "Default": "ami-0ccdabcd14b6f54b6",
+            "Default": "ami-045cc736276ed5a52",
             "Description": "Enter AMI ID"
         },
         "ServiceClusterAmiId": {
             "Type": "String",
-            "Default": "ami-0275af96c5c94fdbe",
+            "Default": "ami-038da9cae1da1ae31",
             "Description": "Enter AMI ID"
         },
         "WorkloadClusterInstanceSize": {
