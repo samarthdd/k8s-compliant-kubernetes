@@ -26,6 +26,12 @@ An instance of this version can be privisioned using Amazon EC2 Launch Template.
 
 Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json` CloudFormation template to deploy a number of Workload Clusters and a single Service Cluster.
 
+Set values for:
+
+* KeyName
+* LoggingPassword
+* MonitoringPassword
+
 ### Service cluster (Production version)
 
 ## OLD CONTENT
