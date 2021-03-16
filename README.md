@@ -26,13 +26,36 @@ An instance of this version can be privisioned using Amazon EC2 Launch Template.
 
 Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json` CloudFormation template to deploy a number of Workload Clusters and a single Service Cluster.
 
+| Region | Stack |
+| --- | --- |
+| Ireland | [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=compliant-k8s-stack&templateURL=https://cf-templates-compliant-k8s-eu-west-1.s3-eu-west-1.amazonaws.com/Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json) |
+
+* Click on one of the buttons above depending on the region you want to work on
+* When prompted with the image below, click Next
+
 Set values for:
 
-* KeyName
-* LoggingPassword
-* MonitoringPassword
+* `KeyName`
+* `LoggingPassword`
+* `MonitoringPassword`
+
+You may also change the number of Workload clusters:
+
+* `WorkloadClusterInstanceCount`
 
 ### Service cluster (Production version)
+
+## Developing
+
+### Update CloudFormation template
+
+Create the S3 bucket (if does not exist already)
+
+    aws s3 mb s3://cf-templates-compliant-k8s-eu-west-1 --region eu-west-1
+
+Upload the CloudFormation template
+
+    aws s3 cp Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json s3://cf-templates-compliant-k8s-eu-west-1/Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json
 
 ## OLD CONTENT
 
