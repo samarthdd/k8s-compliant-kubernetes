@@ -56,14 +56,17 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-1
 
+    - name: Update and upgrade apt
+      run: |
+        sudo apt -y update && sudo apt -y upgrade
+
     - name: Setup PWGEN
       run: |
-        sudo apt install pwgen
+        sudo apt -y install pwgen
 
     - name: Setup PIP
       run: |
-        sudo apt update
-        sudo apt install python3-pip
+        sudo apt -y install python3-pip
         pip3 --version
         sudo pip3 install setuptools-rust setuptools
         sudo -H pip install setuptools
