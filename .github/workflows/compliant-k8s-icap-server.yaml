@@ -76,20 +76,6 @@ jobs:
         cd compliantkubernetes-apps
         ansible-playbook -e 'ansible_python_interpreter=/usr/bin/python3' --ask-become-pass --connection local --inventory 127.0.0.1, get-requirements.yaml
 
-    - name: Setup SOPS
-      run: |
-        sudo curl -L -o sops https://github.com/mozilla/sops/releases/download/v3.6.1/sops-v3.6.1.linux
-        sudo mv sops /usr/local/bin
-        sudo chmod a+x /usr/local/bin/sops
-        sops --version
-
-    - name: Setup yq
-      run: |
-        sudo curl -L -o yq https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64
-        sudo mv yq /usr/local/bin
-        sudo chmod a+x /usr/local/bin/yq
-        yq --version
-
     # build artifact
     - name: Setup Packer
       run: |
