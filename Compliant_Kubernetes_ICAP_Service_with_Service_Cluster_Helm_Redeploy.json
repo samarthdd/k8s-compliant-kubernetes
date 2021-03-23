@@ -17,7 +17,7 @@
         },
         "WorkloadClusterAmiId": {
             "Type": "String",
-            "Default": "ami-045cc736276ed5a52",
+            "Default": "ami-0d6a385a02ade7beb",
             "Description": "Enter AMI ID"
         },
         "ServiceClusterAmiId": {
@@ -69,47 +69,10 @@
             "Type": "String",
             "Default": "200"
         },
-        "AdaptationServiceImage": {
-            "Description": "Docker image for adaptation-service",
+        "WorkloadClusterUserData": {
+            "Description": "Userdata for Worload Cluster VMs (base64 encoded)",
             "Type": "String",
-            "Default": "glasswallsolutions/icap-adaptation-service:main-718a5ce",
-            "ConstraintDescription": "must be a valid image localtion."
-        },
-        "ArchiveAdaptationServiceImage": {
-            "Description": "Docker image for archive-adaptation-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/archive-adaptation-service:main-ddf071a",
-            "ConstraintDescription": "must be a valid image localtion."
-        },
-        "EventSubmissionServiceImage": {
-            "Description": "Docker image for archive-adaptation-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/event-submission-service:main-de67dec",
-            "ConstraintDescription": "must be a valid image localtion."
-        },
-        "GlasswallIcapAdaptationEventApiImage": {
-            "Description": "Docker image for glasswall-icap-adaptation-event-api",
-            "Type": "String",
-            "Default": "glasswallsolutions/icap-adaptation-service:main-718a5ce",
-            "ConstraintDescription": "must be a valid image localtion."
-        },
-        "MvpIcapServiceImage": {
-            "Description": "Docker image for mvp-icap-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/mvp-icap-service:main-550d0fc",
-            "ConstraintDescription": "must be a valid image localtion."
-        },
-        "PolicyUpdateServiceImage": {
-            "Description": "Docker image for policy-update-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/policy-update-service:main-5a6d7a1",
-            "ConstraintDescription": "must be a valid image localtion."
-        },
-        "IcapRequestProcessingImage": {
-            "Description": "Docker image for icap-request-processing",
-            "Type": "String",
-            "Default": "elastisys/icap-request-processing:v0.2.1",
-            "ConstraintDescription": "must be a valid image localtion."
+            "Default": "I2Nsb3VkLWNvbmZpZwoKcnVuY21kOgogIC0gZ2l0IGNsb25lIC0tYnJhbmNoIGZpeGVzLWZvci1jb21wbGlhbnRrdWJlcm5ldGVzLXVwZGF0ZWQgaHR0cHM6Ly9naXRodWIuY29tL2VsYXN0aXN5cy9pY2FwLWluZnJhc3RydWN0dXJlLmdpdCAvaG9tZS91YnVudHUvaWNhcC1pbmZyYXN0cnVjdHVyZQogIC0gc3VkbyBjaG93biAxMDAwOjEwMDAgL2V0Yy9rdWJlcm5ldGVzL2FkbWluLmNvbmYKICAtIHN1ZG8gY2htb2QgZy1yIC9ldGMva3ViZXJuZXRlcy9hZG1pbi5jb25mCiAgLSBzdWRvIG1rZGlyIC1wIC9ob21lL3VidW50dS8ua3ViZTsgc3VkbyBjcCAvZXRjL2t1YmVybmV0ZXMvYWRtaW4uY29uZiAvaG9tZS91YnVudHUvLmt1YmUvY29uZmlnOyBzdWRvIGNobW9kIGErciAvaG9tZS91YnVudHUvLmt1YmUvY29uZmlnCiAgLSBzbGVlcCAxMjA7IHdoaWxlICEgc3VkbyAtdSB1YnVudHUgaGVsbWZpbGUgLWYgL2hvbWUvdWJ1bnR1L2ljYXAtaW5mcmFzdHJ1Y3R1cmUvd2lwLWhlbG1maWxlLWdsYXNzd2FsbC1pY2FwLnlhbWwgLWUgd29ya2xvYWRfY2x1c3RlciBhcHBseSA+PiAvaG9tZS91YnVudHUvaGVsbWZpbGUubG9nIDI+JjE7IGRvIHNsZWVwIDMwOyBkb25lOwogIC0gZXhwb3J0IEtVQkVDT05GSUc9L2V0Yy9rdWJlcm5ldGVzL2FkbWluLmNvbmYKIyAgLSBrdWJlY3RsIGNyZWF0ZSAtbiBpY2FwLWFkYXB0YXRpb24gc2VjcmV0IGRvY2tlci1yZWdpc3RyeSByZWdjcmVkIC0tZG9ja2VyLXNlcnZlcj1odHRwczovL2luZGV4LmRvY2tlci5pby92MS8gLS1kb2NrZXItdXNlcm5hbWU9JHtET0NLRVJfVVNFUk5BTUV9IC0tZG9ja2VyLXBhc3N3b3JkPSR7RE9DS0VSX1BBU1NXT1JEfSAtLWRvY2tlci1lbWFpbD0ke0RPQ0tFUl9FTUFJTH0iXQogIC0gb3BlbnNzbCByZXEgLW5ld2tleSByc2E6MjA0OCAtbm9kZXMgLWtleW91dCB0bHMua2V5IC14NTA5IC1kYXlzIDM2NSAtb3V0IGNlcnRpZmljYXRlLmNydCAtc3ViaiAiL0M9U0UvU1Q9VmFzdGVyYm90dGVuL0w9VW1lYS9PPUVsYXN0aXN5cy9PVT1EZXZlbG9wbWVudC9DTj1zc2wuZWxhc3Rpc3lzLm9yZyIKICAtIGt1YmVjdGwgY3JlYXRlIHNlY3JldCB0bHMgaWNhcC1zZXJ2aWNlLXRscy1jb25maWcgLS1uYW1lc3BhY2UgaWNhcC1hZGFwdGF0aW9uIC0ta2V5IHRscy5rZXkgLS1jZXJ0IGNlcnRpZmljYXRlLmNydAogIC0ga3ViZWN0bCBkZWxldGUgc2VydmljZSBmcm9udGVuZC1pY2FwLWxiIC1uIGljYXAtYWRhcHRhdGlvbgogIC0ga3ViZWN0bCBwYXRjaCBzZXJ2aWNlL2ljYXAtc2VydmljZSAtbiBpY2FwLWFkYXB0YXRpb24gLXAgJ3sic3BlYyI6eyJwb3J0cyI6W3sicG9ydCI6MTM0NCwibm9kZVBvcnQiOjEzNDR9XX19JwogIC0ga3ViZWN0bCBwYXRjaCBzZXJ2aWNlL2ljYXAtc2VydmljZSAtbiBpY2FwLWFkYXB0YXRpb24gLXAgJ3sic3BlYyI6eyJwb3J0cyI6W3sicG9ydCI6MTM0NSwibm9kZVBvcnQiOjEzNDV9XX19JwoKZ2xhc3N3YWxsOgogIGNsdXN0ZXI6IGF3cy1jb21wbGlhbnQtazhzLWljYXAtc2VydmljZQogIG1vbml0b3Jpbmc6CiAgICB1c2VybmFtZTogd2NXcml0ZXIKICAgIHBhc3N3b3JkOiBpZVRpMk9oVzFvb20KICBsb2dnaW5nOgogICAgdXNlcm5hbWU6IGZsdWVudGQKICAgIHBhc3N3b3JkOiBTV1ZuYUdsbGFtVnBOVVZwCiAgZG9tYWluOiBkZWZhdWx0LmNvbXBsaWFudGt1YmVyZXRlcwogIHNlcnZpY2UtY2x1c3Rlcjogb3BzLmRlZmF1bHQuY29tcGxpYW50a3ViZXJldGVzCg=="
         }
     },
     "Outputs": {
@@ -458,77 +421,7 @@
                     }
                 ],
                 "UserData": {
-                    "Fn::Base64": {
-                        "Fn::Join": [
-                            "",
-                            [
-                                "#cloud-config\n",
-                                "\n",
-                                "runcmd:\n",
-                                "  - sudo /usr/local/bin/cfn-signal -e $? ",
-                                "   --stack ",
-                                {
-                                    "Ref": "AWS::StackName"
-                                },
-                                "   --resource WebServerGroup",
-                                "   --region eu-west-1",
-                                "\n\n",
-                                "glasswall:\n",
-                                "  images: \n",
-                                "    adaptation-service: ",
-                                {
-                                    "Ref": "AdaptationServiceImage"
-                                },
-                                "\n",
-                                "    archive-adaptation-service: ",
-                                {
-                                    "Ref": "ArchiveAdaptationServiceImage"
-                                },
-                                "\n",
-                                "    event-submission-service: ",
-                                {
-                                    "Ref": "EventSubmissionServiceImage"
-                                },
-                                "\n",
-                                "    glasswall-icap-adaptation-event-api: ",
-                                {
-                                    "Ref": "GlasswallIcapAdaptationEventApiImage"
-                                },
-                                "\n",
-                                "    mvp-icap-service: ",
-                                {
-                                    "Ref": "MvpIcapServiceImage"
-                                },
-                                "\n",
-                                "    policy-update-service: ",
-                                {
-                                    "Ref": "PolicyUpdateServiceImage"
-                                },
-                                "\n",
-                                "    icap-request-processing: ",
-                                {
-                                    "Ref": "IcapRequestProcessingImage"
-                                },
-                                "\n",
-                                "  monitoring:\n",
-                                "    username: wcWriter\n",
-                                "    password: ",
-                                {
-                                    "Ref": "MonitoringPassword"
-                                },
-                                "\n",
-                                "  logging:\n",
-                                "    username: fluentd\n",
-                                "    password: ",
-                                {
-                                    "Ref": "LoggingPassword"
-                                },
-                                "\n",
-                                "  domain: default.compliantkuberetes\n",
-                                "  service-cluster: ops.default.compliantkuberetes\n"
-                            ]
-                        ]
-                    }
+                    "Ref": "WorkloadClusterUserData"
                 }
             },
             "Metadata": {
