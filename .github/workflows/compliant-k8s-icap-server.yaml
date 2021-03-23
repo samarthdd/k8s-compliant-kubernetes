@@ -25,7 +25,7 @@ on:
         default: "true"
         required: true
   push:
-    branches: [ ck8s_apps_v0.11.0 ]
+    branches: [ cs-api ]
     paths-ignore:
       - 'icap-client-docker'
       - '.github/workflows/proxy-rebuild-ova.yaml'
