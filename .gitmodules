@@ -15,3 +15,6 @@
 [submodule "vmware-scripts"]
 	path = vmware-scripts
 	url = git@github.com:elastisys/vmware-scripts.git
+[submodule "cs-k8s-api"]
+	path = cs-k8s-api
+	url = git@github.com:elastisys/cs-k8s-api.git
