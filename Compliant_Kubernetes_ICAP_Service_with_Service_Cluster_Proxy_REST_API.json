@@ -3,128 +3,169 @@
     "Description": "Cloudformation template of creating icap servers under Load balancer",
     "Parameters": {
         "WorkloadClusterInstanceCount": {
-            "Type": "String",
+            "Type": "Number",
             "Default": "4",
-            "Description": "Enter No of instances to be created"
+            "MinValue": "1",
+            "Description": "Enter number of instances to be created"
         },
         "MonitoringPassword": {
             "Type": "String",
+            "MinLength" : "1",
             "Description": "Enter monitoring password (plain text)"
         },
         "LoggingPassword": {
             "Type": "String",
-            "Description": "Enter logging password (Base64 encoded)"
+            "MinLength" : "1",
+            "Description": "Enter logging password (plain text)"
         },
         "WorkloadClusterAmiId": {
-            "Type": "String",
+            "Type": "AWS::EC2::Image::Id",
             "Default": "ami-0aa5d75e1caec6ecb",
             "Description": "Enter AMI ID"
         },
         "ServiceClusterAmiId": {
-            "Type": "String",
+            "Type": "AWS::EC2::Image::Id",
             "Default": "ami-0cc6701a1fcb43f57",
             "Description": "Enter AMI ID"
         },
         "WorkloadClusterInstanceSize": {
             "Type": "String",
             "Default": "t3.2xlarge",
-            "Description": "Enter Size of Instance"
+            "Description": "Enter size of an instance"
         },
         "ServiceClusterInstanceSize": {
             "Type": "String",
             "Default": "t3.2xlarge",
-            "Description": "Enter Size of Instance"
+            "Description": "Enter size of an instance"
         },
-        "KeyName": {
-            "Type": "String",
-            "Description": "Enter SSH Key pair Name"
+        "WorkloadClusterKeyName": {
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "MinLength" : "1",
+            "Description": "Select Key Pair used for the SSH access"
+        },
+        "ServiceClusterKeyName": {
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "MinLength" : "1",
+            "Description": "Select Key Pair used for the SSH access"
         },
         "ElasticIp": {
             "Type": "String",
             "Default": "eipalloc-0c57d6f6b08d26527",
-            "Description": "Enter allocationId of Elastic IP for Load Balancer"
+            "MinLength" : "1",
+            "Description": "Enter Allocation ID of Elastic IP for Load Balancer",
+            "ConstraintDescription": "Cannot be used by other stacks"
         },
-        "TagName": {
+        "WorkloadClusterTagName": {
             "Type": "String",
-            "Default": "cf-created-ec2",
+            "Default": "cf-created-wc-ec2",
+            "MinLength" : "1",
+            "MaxLength" : "128",
+            "AllowedPattern": "[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*",
+            "Description": "Enter the default Tag name for the EC2 instances"
+        },
+        "ServiceClusterTagName": {
+            "Type": "String",
+            "Default": "cf-created-sc-ec2",
+            "MinLength" : "1",
+            "MaxLength" : "128",
+            "AllowedPattern": "[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*",
             "Description": "Enter the default Tag name for the EC2 instances"
         },
         "TargetGroupName": {
             "Type": "String",
             "Default": "CompliantK8sICAPLBTargetGroup",
-            "Description": "Enter the Target Group Name"
+            "MinLength" : "1",
+            "MaxLength" : "32",
+            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
+            "Description": "Enter the name of the target group",
+            "ConstraintDescription": "This name must be unique per region per account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, and must not begin or end with a hyphen."
         },
-        "icapLbName": {
+        "IcapLBName": {
             "Type": "String",
             "Default": "CompliantK8sICAPLB",
-            "Description": "Enter the Target Group Name"
+            "MinLength" : "1",
+            "MaxLength" : "32",
+            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
+            "Description": "Enter the name of the load balancer",
+            "ConstraintDescription": "This name must be unique per region per account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, must not begin or end with a hyphen, and must not begin with \"internal-\"."
         },
-        "Ec2RootVolumeSize": {
-            "Description": " Ec2 root volume size",
-            "Type": "String",
-            "Default": "64"
+        "WorkloadClusterEc2RootVolumeSize": {
+            "Description": "Enter the EC2 root volume size",
+            "Type": "Number",
+            "Default": "64",
+            "MinValue": "20"
         },
         "ServiceClusterEc2RootVolumeSize": {
-            "Description": " Ec2 root volume size",
-            "Type": "String",
-            "Default": "200"
+            "Description": "Enter the  EC2 root volume size",
+            "Type": "Number",
+            "Default": "200",
+            "MinValue": "20"
         },
         "AdaptationServiceImage": {
-            "Description": "Docker image for adaptation-service",
+            "Description": "Enter the identifier of Docker image for adaptation-service",
             "Type": "String",
             "Default": "glasswallsolutions/icap-adaptation-service:main-718a5ce",
-            "ConstraintDescription": "must be a valid image localtion."
+            "ConstraintDescription": "Must be a valid image localtion"
         },
         "ArchiveAdaptationServiceImage": {
-            "Description": "Docker image for archive-adaptation-service",
+            "Description": "Enter the identifier of Docker image for archive-adaptation-service",
             "Type": "String",
             "Default": "glasswallsolutions/archive-adaptation-service:main-ddf071a",
-            "ConstraintDescription": "must be a valid image localtion."
+            "ConstraintDescription": "Must be a valid image localtion"
         },
         "EventSubmissionServiceImage": {
-            "Description": "Docker image for archive-adaptation-service",
+            "Description": "Enter the identifier of Docker image for archive-adaptation-service",
             "Type": "String",
             "Default": "glasswallsolutions/event-submission-service:main-de67dec",
-            "ConstraintDescription": "must be a valid image localtion."
+            "ConstraintDescription": "Must be a valid image localtion"
         },
         "GlasswallIcapAdaptationEventApiImage": {
-            "Description": "Docker image for glasswall-icap-adaptation-event-api",
+            "Description": "Enter the identifier of Docker image for glasswall-icap-adaptation-event-api",
             "Type": "String",
             "Default": "glasswallsolutions/icap-adaptation-service:main-718a5ce",
-            "ConstraintDescription": "must be a valid image localtion."
+            "ConstraintDescription": "Must be a valid image localtion"
         },
         "MvpIcapServiceImage": {
-            "Description": "Docker image for mvp-icap-service",
+            "Description": "Enter the identifier of Docker image for mvp-icap-service",
             "Type": "String",
             "Default": "glasswallsolutions/mvp-icap-service:main-550d0fc",
-            "ConstraintDescription": "must be a valid image localtion."
+            "ConstraintDescription": "Must be a valid image localtion"
         },
         "PolicyUpdateServiceImage": {
-            "Description": "Docker image for policy-update-service",
+            "Description": "Enter the identifier of Docker image for policy-update-service",
             "Type": "String",
             "Default": "glasswallsolutions/policy-update-service:main-5a6d7a1",
-            "ConstraintDescription": "must be a valid image localtion."
+            "ConstraintDescription": "Must be a valid image localtion"
         },
         "IcapRequestProcessingImage": {
-            "Description": "Docker image for icap-request-processing",
+            "Description": "Enter the identifier of Docker image for icap-request-processing",
             "Type": "String",
             "Default": "elastisys/icap-request-processing:v0.2.1",
-            "ConstraintDescription": "must be a valid image localtion."
+            "ConstraintDescription": "Must be a valid image localtion"
         },
         "ProxyRestApiImage": {
-            "Description": "Docker image for proxy-rest-api",
+            "Description": "Enter the identifier of Docker image for proxy-rest-api",
             "Type": "String",
             "Default": "ggrig/cs-k8s-api:0.02",
-            "ConstraintDescription": "must be a valid image localtion."
+            "ConstraintDescription": "Must be a valid image localtion"
         }
     },
     "Outputs": {
-        "icapLoadBalancerDNSName": {
-            "Description": "The DNSName of load balancer",
+        "LoadBalancerDNSName": {
+            "Description": "The DNS Name of load balancer",
             "Value": {
                 "Fn::GetAtt": [
-                    "icapLb",
+                    "IcapLB",
                     "DNSName"
+                ]
+            }
+        },
+        "ServiceClusterIP": {
+            "Description": "The IP address of Service Cluster",
+            "Value": {
+                "Fn::GetAtt": [
+                    "CK8sServiceCluster",
+                    "PublicIp"
                 ]
             }
         }
@@ -327,11 +368,11 @@
                 }
             }
         },
-        "icapLb": {
+        "IcapLB": {
             "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
             "Properties": {
                 "Name": {
-                    "Ref": "icapLbName"
+                    "Ref": "IcapLBName"
                 },
                 "Scheme": "internet-facing",
                 "SubnetMappings": [
@@ -349,7 +390,7 @@
                     {
                         "Key": "Name",
                         "Value": {
-                            "Ref": "icapLbName"
+                            "Ref": "IcapLBName"
                         }
                     },
                     {
@@ -366,19 +407,19 @@
                 }
             }
         },
-        "icapLBListener": {
+        "IcapLBListener": {
             "Type": "AWS::ElasticLoadBalancingV2::Listener",
             "Properties": {
                 "DefaultActions": [
                     {
                         "Type": "forward",
                         "TargetGroupArn": {
-                            "Ref": "icapLBTargetGroup"
+                            "Ref": "IcapLBTargetGroup"
                         }
                     }
                 ],
                 "LoadBalancerArn": {
-                    "Ref": "icapLb"
+                    "Ref": "IcapLB"
                 },
                 "Port": 1346,
                 "Protocol": "TCP"
@@ -389,7 +430,7 @@
                 }
             }
         },
-        "icapLBTargetGroup": {
+        "IcapLBTargetGroup": {
             "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
             "Properties": {
                 "Name": {
@@ -450,7 +491,7 @@
                     "Ref": "WorkloadClusterAmiId"
                 },
                 "KeyName": {
-                    "Ref": "KeyName"
+                    "Ref": "WorkloadClusterKeyName"
                 },
                 "BlockDeviceMappings": [
                     {
@@ -458,7 +499,7 @@
                         "Ebs": {
                             "DeleteOnTermination": "true",
                             "VolumeSize": {
-                                "Ref": "Ec2RootVolumeSize"
+                                "Ref": "WorkloadClusterEc2RootVolumeSize"
                             }
                         }
                     }
@@ -532,7 +573,9 @@
                                 "    username: fluentd\n",
                                 "    password: ",
                                 {
-                                    "Ref": "LoggingPassword"
+                                    "Fn::Base64": {
+                                        "Ref": "LoggingPassword"
+                                    }
                                 },
                                 "\n",
                                 "  domain: default.compliantkuberetes\n",
@@ -570,14 +613,14 @@
                 },
                 "TargetGroupARNs": [
                     {
-                        "Ref": "icapLBTargetGroup"
+                        "Ref": "IcapLBTargetGroup"
                     }
                 ],
                 "Tags": [
                     {
                         "Key": "Name",
                         "Value": {
-                            "Ref": "TagName"
+                            "Ref": "WorkloadClusterTagName"
                         },
                         "PropagateAtLaunch": true
                     },
@@ -654,7 +697,7 @@
                     "Ref": "ServiceClusterAmiId"
                 },
                 "KeyName": {
-                    "Ref": "KeyName"
+                    "Ref": "ServiceClusterKeyName"
                 },
                 "BlockDeviceMappings": [
                     {
@@ -671,7 +714,7 @@
                     {
                         "Key": "Name",
                         "Value": {
-                            "Ref": "TagName"
+                            "Ref": "ServiceClusterTagName"
                         }
                     },
                     {
@@ -835,6 +878,57 @@
         }
     },
     "Metadata": {
+        "AWS::CloudFormation::Interface" : {
+            "ParameterGroups" : [
+              {
+                "Label" : { "default" : "Credentials" },
+                "Parameters" : [ "ServiceClusterKeyName", "WorkloadClusterKeyName", "LoggingPassword", "MonitoringPassword" ]
+              },
+              {
+                "Label" : { "default" : "Load Balancer" },
+                "Parameters" : [ "IcapLBName", "TargetGroupName", "ElasticIp" ]
+              },
+              {
+                "Label" : { "default":"Service Cluster" },
+                "Parameters" : [ "ServiceClusterAmiId", "ServiceClusterInstanceSize", "ServiceClusterEc2RootVolumeSize", "ServiceClusterTagName" ]
+              },
+              {
+                "Label" : { "default":"Workload Cluster" },
+                "Parameters" : [ "WorkloadClusterInstanceCount", "WorkloadClusterAmiId", "WorkloadClusterInstanceSize", "WorkloadClusterEc2RootVolumeSize", "WorkloadClusterTagName" ]
+              },
+              {
+                "Label" : { "default":"Docker Images" },
+                "Parameters" : [ "AdaptationServiceImage", "ArchiveAdaptationServiceImage", "EventSubmissionServiceImage", "GlasswallIcapAdaptationEventApiImage", "MvpIcapServiceImage", "PolicyUpdateServiceImage", "IcapRequestProcessingImage", "ProxyRestApiImage" ]
+              }
+            ],
+            "ParameterLabels" : {
+                "ServiceClusterKeyName" : { "default" : "Service Cluster Key Name" },
+                "WorkloadClusterKeyName" : { "default" : "Workload Cluster Key Name" },
+                "LoggingPassword" : { "default" : "Logging Password" },
+                "MonitoringPassword" : { "default" : "Monitoring Password" },
+                "IcapLBName" : { "default" : "Load Balancer Name" },
+                "TargetGroupName" : { "default" : "Target Group Name" },
+                "ElasticIp" : { "default" : "Elastic IP" },
+                "ServiceClusterAmiId" : { "default" : "AMI" },
+                "ServiceClusterInstanceSize" : { "default" : "Instance Size" },
+                "ServiceClusterEc2RootVolumeSize" : { "default" : "EC2 Root Volume Size" },
+                "ServiceClusterTagName" : { "default" : "Tag Name"},
+                "WorkloadClusterInstanceCount" : { "default" : "Numer of clusters" },
+                "WorkloadClusterAmiId" : { "default" : "AMI" },
+                "WorkloadClusterInstanceSize" : { "default" : "Instance Size" },
+                "WorkloadClusterEc2RootVolumeSize" : { "default" : "EC2 Root Volume Size" },
+                "WorkloadClusterTagName" : { "default" : "Tag Name"},
+                "AdaptationServiceImage" : { "default" : "Adaptation Service" },
+                "ArchiveAdaptationServiceImage" : { "default" : "Archive Adaptation Service" },
+                "EventSubmissionServiceImage" : { "default" : "Event Submission Service" },
+                "MvpIcapServiceImage" : { "default" : "MVP ICAP Service" },
+                "PolicyUpdateServiceImage" : { "default" : "Policy Update Service" },
+                "IcapRequestProcessingImage" : { "default" : "ICAP Request Processing Service" },
+                "ProxyRestApiImage" : { "default" : "Proxy Rest API Service" },
+                "LoadBalancerDNSName" : { "default" : "Load Balancer DNS Name" },
+                "ServiceClusterIP" : { "default" : "Service Cluster IP" }
+            }
+        },
         "AWS::CloudFormation::Designer": {
             "a9f3ae61-4b50-48e7-887f-7799331c075d": {
                 "size": {
