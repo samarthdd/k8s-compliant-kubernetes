@@ -17,12 +17,12 @@
         },
         "WorkloadClusterAmiId": {
             "Type": "String",
-            "Default": "ami-045cc736276ed5a52",
+            "Default": "ami-0aa5d75e1caec6ecb",
             "Description": "Enter AMI ID"
         },
         "ServiceClusterAmiId": {
             "Type": "String",
-            "Default": "ami-038da9cae1da1ae31",
+            "Default": "ami-0cc6701a1fcb43f57",
             "Description": "Enter AMI ID"
         },
         "WorkloadClusterInstanceSize": {
@@ -109,6 +109,12 @@
             "Description": "Docker image for icap-request-processing",
             "Type": "String",
             "Default": "elastisys/icap-request-processing:v0.2.1",
+            "ConstraintDescription": "must be a valid image localtion."
+        },
+        "ProxyRestApiImage": {
+            "Description": "Docker image for proxy-rest-api",
+            "Type": "String",
+            "Default": "ggrig/cs-k8s-api:0.02",
             "ConstraintDescription": "must be a valid image localtion."
         }
     },
@@ -374,7 +380,7 @@
                 "LoadBalancerArn": {
                     "Ref": "icapLb"
                 },
-                "Port": 1344,
+                "Port": 1346,
                 "Protocol": "TCP"
             },
             "Metadata": {
@@ -396,7 +402,7 @@
                 "HealthCheckProtocol": "HTTP",
                 "HealthyThresholdCount": 2,
                 "UnhealthyThresholdCount": 2,
-                "Port": 1344,
+                "Port": 1346,
                 "Protocol": "TCP",
                 "VpcId": {
                     "Ref": "LBVPC"
@@ -508,6 +514,11 @@
                                 "    icap-request-processing: ",
                                 {
                                     "Ref": "IcapRequestProcessingImage"
+                                },
+                                "\n",
+                                "    image-proxy-rest-api: ",
+                                {
+                                    "Ref": "ProxyRestApiImage"
                                 },
                                 "\n",
                                 "  monitoring:\n",
@@ -806,6 +817,12 @@
                         "IpProtocol": "TCP",
                         "FromPort": "7000",
                         "ToPort": "7000",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "TCP",
+                        "FromPort": "1346",
+                        "ToPort": "1346",
                         "CidrIp": "0.0.0.0/0"
                     }
                 ]

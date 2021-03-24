@@ -24,11 +24,11 @@ An instance of this version can be privisioned using Amazon EC2 Launch Template.
 
 ### Workload and Service cluster (Development version)
 
-Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json` CloudFormation template to deploy a number of Workload Clusters and a single Service Cluster.
+Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json` CloudFormation template to deploy a number of Workload Clusters and a single Service Cluster.
 
 | Region | Stack |
 | --- | --- |
-| Ireland | [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=compliant-k8s-stack&templateURL=https://cf-templates-compliant-k8s-eu-west-1.s3-eu-west-1.amazonaws.com/Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json) |
+| Ireland | [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=compliant-k8s-stack&templateURL=https://cf-templates-compliant-k8s-eu-west-1.s3-eu-west-1.amazonaws.com/Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json) |
 
 * Click on one of the buttons above depending on the region you want to work on
 * When prompted with the image below, click Next
@@ -36,16 +36,15 @@ Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json` CloudFormation
 
 * Set values for:
 
-    * `KeyName`
-    * `LoggingPassword`
-    * `MonitoringPassword`
+  * `KeyName`
+  * `LoggingPassword`
+  * `MonitoringPassword`
 
   You may also want to change the number of Workload clusters:
 
-    * `WorkloadClusterInstanceCount`
+  * `WorkloadClusterInstanceCount`
 
   ![Screenshot from 2021-03-16 17-05-24](https://user-images.githubusercontent.com/7603614/111343544-d22a0280-867b-11eb-9c38-5fef9a6010e8.png)
-
 
 ### Service cluster (Production version)
 
@@ -59,7 +58,7 @@ Create the S3 bucket (if does not exist already)
 
 Upload the CloudFormation template
 
-    aws s3 cp Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json s3://cf-templates-compliant-k8s-eu-west-1/Compliant_Kubernetes_ICAP_Service_with_Service_Cluster.json
+    aws s3 cp Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json s3://cf-templates-compliant-k8s-eu-west-1/Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json
 
 ## OLD CONTENT
 
