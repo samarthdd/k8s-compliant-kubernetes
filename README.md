@@ -32,9 +32,12 @@ Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json`
 
 * Click on one of the buttons above depending on the region you want to work on
 * When prompted with the image below, click Next
-  ![Screenshot from 2021-03-16 17-04-13](https://user-images.githubusercontent.com/7603614/111343283-92631b00-867b-11eb-9ebd-707869012ca5.png)
 
-* Enter `Stack name`.
+  ![Screenshot from 2021-03-25 17-13-06](https://user-images.githubusercontent.com/7603614/112506566-2fb20380-8d8e-11eb-9476-909cc8a751ed.png)
+
+* Enter `Stack name`
+
+  ![Screenshot from 2021-03-25 17-13-45](https://user-images.githubusercontent.com/7603614/112506657-45bfc400-8d8e-11eb-91a9-59e3c0b558ef.png)
 
   Set **Credentials**:
 
@@ -42,19 +45,21 @@ Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json`
   * `Logging Password` to Base64 encoded value of Fluentd password
   * `Monitoring Password` to plain text of InfluxDB WC writer password
 
+  ![Screenshot from 2021-03-25 17-14-04](https://user-images.githubusercontent.com/7603614/112506741-55d7a380-8d8e-11eb-8627-8427d194eeed.png)
+
   Make sure that the following configuration parameters for **Load Balancer** are not used by other stacks in the AWS region:
 
   * `Load Balancer Name`
   * `Target Group Name`
   * `Elastic IP`
 
+  ![Screenshot from 2021-03-25 17-14-34](https://user-images.githubusercontent.com/7603614/112506814-66881980-8d8e-11eb-9658-1a75fc15e043.png)
+
   You may also change:
 
   * **Service Cluster** specification
   * **Workload Cluster** specification including the number of Workload Cluster instances
   * **Docker Images** used for the Glasswall services
-
-  ![Screenshot from 2021-03-16 17-05-24](https://user-images.githubusercontent.com/7603614/111343544-d22a0280-867b-11eb-9c38-5fef9a6010e8.png)
 
 * When the stack creation is complete, in the **Outputs** tab you can find:
   * `Load Balancer DNS Name` that accept requests on port `1346`
