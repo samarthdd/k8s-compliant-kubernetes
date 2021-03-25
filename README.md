@@ -65,6 +65,8 @@ Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json`
   * `Load Balancer DNS Name` that accept requests on port `1346`
   * `Service Cluster IP` that exposes Grafana on port `3000` and Kibana on port `5601`
 
+  ![Screenshot from 2021-03-25 18-05-43](https://user-images.githubusercontent.com/7603614/112513618-ced9f980-8d94-11eb-9559-61cee07e7a93.png)
+
 ### Service cluster (Production version)
 
 ## Developing
