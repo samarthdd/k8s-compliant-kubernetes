@@ -34,17 +34,31 @@ Use `Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json`
 * When prompted with the image below, click Next
   ![Screenshot from 2021-03-16 17-04-13](https://user-images.githubusercontent.com/7603614/111343283-92631b00-867b-11eb-9ebd-707869012ca5.png)
 
-* Set values for:
+* Enter `Stack name`.
 
-  * `KeyName`
-  * `LoggingPassword`
-  * `MonitoringPassword`
+  Set **Credentials**:
 
-  You may also want to change the number of Workload clusters:
+  * `Service Cluster Key Name` and `Workload Cluster Key Name` to the names of key pairs (previously uploaded to AWS) that will be allowed to SSH into VMs
+  * `Logging Password` to Base64 encoded value of Fluentd password
+  * `Monitoring Password` to plain text of InfluxDB WC writer password
 
-  * `WorkloadClusterInstanceCount`
+  Make sure that the following configuration parameters for **Load Balancer** are not used by other stacks in the AWS region:
+
+  * `Load Balancer Name`
+  * `Target Group Name`
+  * `Elastic IP`
+
+  You may also change:
+
+  * **Service Cluster** specification
+  * **Workload Cluster** specification including the number of Workload Cluster instances
+  * **Docker Images** used for the Glasswall services
 
   ![Screenshot from 2021-03-16 17-05-24](https://user-images.githubusercontent.com/7603614/111343544-d22a0280-867b-11eb-9c38-5fef9a6010e8.png)
+
+* When the stack creation is complete, in the **Outputs** tab you can find:
+  * `Load Balancer DNS Name` that accept requests on port `1346`
+  * `Service Cluster IP` that exposes Grafana on port `3000` and Kibana on port `5601`
 
 ### Service cluster (Production version)
 
