@@ -25,7 +25,7 @@ on:
         default: "true"
         required: true
   push:
-    branches: [ cs-api ]
+    branches: [ kibana_log_fix ]
     paths-ignore:
       - 'icap-client-docker'
       - '.github/workflows/proxy-rebuild-ova.yaml'
