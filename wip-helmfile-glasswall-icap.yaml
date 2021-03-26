@@ -25,8 +25,8 @@ releases:
   namespace: icap-adaptation
   labels:
     app: workload-cluster-glasswall-rabbitmq
-  chart: ./icap-infrastructure/rabbitmq
+  chart: ./icap-infrastructure/rabbitmq-operator
   version: 0.0.1
   missingFileHandler: Error
   values:
-  - wip-helmfile-glasswall-icap-adaptation.yaml.gotmpl
+  - wip-helmfile-glasswall-icap-rabbitmq.yaml.gotmpl

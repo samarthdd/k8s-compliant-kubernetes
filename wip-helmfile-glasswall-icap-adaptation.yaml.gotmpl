@@ -2,10 +2,11 @@ environment:
 rabbitmqService:
   name: rabbitmq-service
   port: 5672
-  managementPort: 15672
   component: rabbitmq
   app: taskQueue
   key: rabbitmq-cluster-operator
+lbService:
+  dnsname: icap-client-main-t4
 serviceAccount:
   adaptationname: adaptation-service-sa
   archiveadaptationname: archive-adaptation-service-sa
@@ -16,8 +17,11 @@ volumemountpath:
   target: "/var/target"
   transactions: /mnt/transactions
 prometheus:
-  metricsport: 8080
+  metricsport: 8081
+  metricspath: /metrics
+  pushgatewayendpoint: "http://prometheus-pushgateway.icap-central-monitoring.svc.cluster.local:9091"
 queue:
+  messagebrokersecret: "rabbitmq-service-default-user"
   host:
     url: "rabbitmq-service" # this should be deprecated in preference to queue specific hostname
     port: "\"5672\"" # this should be deprecated in preference to queue specific port
@@ -36,25 +40,75 @@ queue:
     port: "\"5672\""
 adaptationservice:
   name: adaptation-service
-  replicas: 1
+  replicas:
+    min: 1
+    max: 80
   amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
   rolename: adaptation-service-role
 archiveadaptationservice:
   name: archive-adaptation-service
   namespace: icap-adaptation
-  replicas: 1
+  replicas:
+    min: 1
+    max: 10
   amqpurl: "amqp://guest:guest@rabbitmq-service:5672/"
   exchange: adaptation-exchange
   rolename: archive-adaptation-service-role
 icapservice:
-  name: mvp-icap-service
+  name: icap-service
   applabel: adaptation
-  replicas: 1
+  replicas:
+    min: 1
+    max: 150
   port: 1344
   tlsport: 1345
   enableFileId: true
 icapserviceconfig:
   processingtimeoutduration: 00:01:00
+cicapservice:
+  conf:
+    PidFile: /var/run/c-icap/c-icap.pid
+    CommandsSocket: /var/run/c-icap/c-icap.ctl
+    Timeout: 300
+    MaxKeepAliveRequests: 100
+    KeepAliveTimeout: 600
+    StartServers: 3
+    MaxServers: 10
+    MinSpareThreads: 10
+    MaxSpareThreads: 20
+    ThreadsPerChild: 10
+    MaxRequestsPerChild: 0
+    Port: 1344
+    TlsPort: 1345 tls-method=TLSv1_2 cert=/usr/local/c-icap/cert/tls.crt key=/usr/local/c-icap/cert/tls.key
+    ServerAdmin: you@your.address
+    ServerName: YourServerName
+    TmpDir: /var/tmp
+    MaxMemObject: 131072
+    DebugLevel: 6
+    Pipelining: !!string on
+    SupportBuggyClients: !!string off
+    ModulesDir: /usr/local/c-icap/lib/c_icap
+    ServicesDir: /usr/local/c-icap/lib/c_icap
+    TemplateDir: /usr/local/c-icap/share/c_icap/templates/
+    TemplateDefaultLanguage: en
+    LoadMagicFile: /usr/local/c-icap/etc/c-icap.magic
+    RemoteProxyUsers: !!string off
+    RemoteProxyUserHeader: X-Authenticated-User
+    RemoteProxyUserHeaderEncoded: !!string on
+    ServerLog: /proc/self/fd/1
+    AccessLog: /proc/self/fd/1
+    Service: echo srv_echo.so
+    Include: gw_rebuild.conf
+  rebuild:
+    Service: gw_rebuild gw_rebuild.so
+    gw_rebuild.MaxObjectSize: 2000M
+    gw_rebuild.Allow204Responses: !!string on
+    gw_rebuild.ProxyAppLocation: /usr/local/bin/cloud-proxy-app
+    gw_rebuild.DataCleanup: !!string on
+icapservicemetricsexporter:
+  icaphost: localhost
+  icapport: 1344
+  service: info?view=text
 podjanitor:
   name: pod-janitor
   namespace: icap-adaptation
@@ -71,7 +125,6 @@ policyupdateservice:
   replicas: 1
   port: 10000
   rolename: policy-update-service-role
-  existingSecret: policyupdateservicesecret
 requestprocessingservice:
   configmapname: request-processing-config
   cpulimit: 1
@@ -103,60 +156,64 @@ transactionqueryservice:
   affinity: {}
 transactionstore:
   shareName: transactions
-  storage: 3Gi
+  storage: 100Gi
 imagestore:
   requestprocessing:
     registry: ""
-    repository: elastisys/icap-request-processing
-    tag: v0.2.1
+    repository: glasswallsolutions/icap-request-processing
+    tag: develop-e14105a
   adaptationservice:
     registry: ""
-    repository: elastisys/icap-adaptation-service
-    tag: v0.2
+    repository: glasswallsolutions/icap-adaptation-service
+    tag: develop-5eeefcd
   podjanitor:
     registry: ""
     repository: glasswallsolutions/pod-janitor
-    tag: develop-dd4c0f8
+    tag: develop-d2f944d
   icapservice:
     registry: ""
     repository: glasswallsolutions/mvp-icap-service
-    tag: develop-7cfec20
+    tag: develop-c968f8d
+  icapservicemetricsexporter:
+    registry: ""
+    repository: glasswallsolutions/icap-service-metrics-exporter
+    tag: develop-8532480
   eventsubmission:
     registry: ""
     repository: glasswallsolutions/event-submission-service
-    tag: develop-1f75835
+    tag: develop-3a1004e
   policyupdate:
     registry: ""
     repository: glasswallsolutions/policy-update-service
-    tag: develop-ba3016f
+    tag: develop-25d78e8
   archiveadaptationservice:
     registry: ""
     repository: glasswallsolutions/archive-adaptation-service
-    tag: develop-5b883e3
+    tag: develop-a042047
   archiveprocessingservice:
     registry: ""
     repository: glasswallsolutions/archive-processing-service
-    tag: develop-897191b
+    tag: develop-0e36a0e
   transactionqueryservice:
     registry: ""
     repository: glasswallsolutions/transaction-query-service
-    tag: develop-2cc1cbf
+    tag: develop-ece85e7
 secrets:
   containerregistry:
     dockerconfigjson: "<<https://gw-icap-keyvault.vault.azure.net/secrets/az-registry-dockerconfig>>"
   transactionqueryservice:
     transactionqueryservicesecret:
-      username: "guest"
-      password: "guest"
+      username: "<<https://gw-icap-keyvault.vault.azure.net/secrets/transactionQueryServiceUsername>>"
+      password: "<<https://gw-icap-keyvault.vault.azure.net/secrets/transactionQueryServicePassword>>"
   policyupdateservice:
     policyupdateservicesecret:
-      username: "<<https://gw-tfstate-Vault.vault.azure.net/secrets/policyUpdateServiceUsername>>"
-      password: "<<https://gw-tfstate-Vault.vault.azure.net/secrets/policyUpdateServicePassword>>"
+      username: "<<https://gw-icap-keyvault.vault.azure.net/secrets/policyUpdateServiceUsername>>"
+      password: "<<https://gw-icap-keyvault.vault.azure.net/secrets/policyUpdateServicePassword>>"
   transactionstore:
     transactionstoresecret:
-      accountname: "guest"
-      accountkey: "guest"
+      azurestorageaccountname: "<<https://gw-icap-keyvault.vault.azure.net/secrets/transactionStoreAccountName>>"
+      azurestorageaccountkey: "<<https://gw-icap-keyvault.vault.azure.net/secrets/transactionStoreAccountKey>>"
   mvpicapservice:
     tls:
-      tlsCert: "<<https://gw-tfstate-Vault.vault.azure.net/secrets/mvpicapserviceTlsCert>>"
-      tlsKey: "<<https://gw-tfstate-Vault.vault.azure.net/secrets/mvpicapserviceTlsKey>>"
+      tlsCert: "<<https://gw-icap-keyvault.vault.azure.net/secrets/mvpicapserviceTlsCert>>"
+      tlsKey: "<<https://gw-icap-keyvault.vault.azure.net/secrets/mvpicapserviceTlsKey>>"
