@@ -1,20 +1,20 @@
 [submodule "compliantkubernetes"]
 	path = compliantkubernetes
-	url = git@github.com:elastisys/compliantkubernetes
+	url = https://github.com/elastisys/compliantkubernetes
 	branch = master
 [submodule "compliantkubernetes-apps"]
 	path = compliantkubernetes-apps
 	url = https://github.com/gurunathg/compliantkubernetes-apps
 	branch = main
-[submodule "icap-infrastructure"]
-	path = icap-infrastructure
-	url = git@github.com:elastisys/icap-infrastructure.git
 [submodule "compliantkubernetes-kubespray"]
 	path = compliantkubernetes-kubespray
-	url = git@github.com:elastisys/compliantkubernetes-kubespray.git
+	url = https://github.com/elastisys/compliantkubernetes-kubespray
 [submodule "vmware-scripts"]
 	path = vmware-scripts
-	url = git@github.com:elastisys/vmware-scripts.git
+	url = https://github.com/elastisys/vmware-scripts
 [submodule "cs-k8s-api"]
 	path = cs-k8s-api
-	url = git@github.com:elastisys/cs-k8s-api.git
+	url = https://github.com/elastisys/cs-k8s-api
+[submodule "icap-infrastructure"]
+	path = icap-infrastructure
+	url = https://github.com/samarthdd/icap-infrastructure
