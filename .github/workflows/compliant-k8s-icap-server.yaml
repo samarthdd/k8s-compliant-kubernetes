@@ -8,18 +8,14 @@ env:
 on:
   workflow_dispatch:
     inputs:
-      icap_branch:
-        description: icap-infrastructe branch to be used
-        default: k8-develop
-        required: false
-      extra_regions:
-        description: Extra regions where AMI should be published. Pass multiple regions with comma separated.
-        default: eu-west-1
-        required: false
       create_sc:
         description: Create Service Cluster
         default: "false"
         required: true
+      cs_api_image:
+        description: CS API Image
+        default: llmsjraj/sample:latest
+        required: true  
       create_ova:
         description: Create OVA
         default: "true"
@@ -130,7 +126,7 @@ jobs:
         cd vmware-scripts/packer
         export SHA8=${GITHUB_SHA::8}
         mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
-        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json -var create_ova=${{ github.event.inputs.create_ova }} -var region=${{ env.AWS_DEFAULT_REGION }} aws-ami.json
+        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json -var create_ova=${{ github.event.inputs.create_ova }} -var cs_api_image=${{ github.event.inputs.cs_api_image }} -var region=${{ env.AWS_DEFAULT_REGION }} aws-ami.json
 
     - name: Build Service Cluster AMI
       if: ${{ github.event.inputs.create_sc }}
