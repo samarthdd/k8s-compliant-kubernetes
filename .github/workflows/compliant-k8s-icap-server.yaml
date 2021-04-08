@@ -18,7 +18,7 @@ on:
         required: false
       create_sc:
         description: Create Service Cluster
-        default: "false"
+        default: false
         required: true
       create_ova:
         description: Create OVA
@@ -117,22 +117,6 @@ jobs:
         sops -i -e wc-config/ssh/id_rsa
         sops -i -e sc-config/ssh/id_rsa
 
-    - name: Build Service Cluster AMI
-      if: ${{ github.event.inputs.create_sc }}
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
-        GNUPGHOME: ${{ env.GNUPGHOME }}
-      run: |
-        cd vmware-scripts/packer
-        export SHA8=${GITHUB_SHA::8}
-        mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
-        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline-sc.json aws-ami-sc.json
-
     - name: Build Workload Cluster AMI
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
@@ -147,7 +131,23 @@ jobs:
         export SHA8=${GITHUB_SHA::8}
         mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
         PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json -var create_ova=${{ github.event.inputs.create_ova }} -var region=${{ env.AWS_DEFAULT_REGION }} aws-ami.json
+      - name: Build Service Cluster AMI
+            if: ${{ github.event.inputs.create_sc }}
+            env:
+              AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+              DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+              DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+              DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
+              GNUPGHOME: ${{ env.GNUPGHOME }}
+            run: |
+              cd vmware-scripts/packer
+              export SHA8=${GITHUB_SHA::8}
+              mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
+              PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline-sc.json aws-ami-sc.json
 
+    
     - name: Delete temporary SSH key
       if: always()
       run: |
