@@ -12,9 +12,6 @@
 [submodule "vmware-scripts"]
 	path = vmware-scripts
 	url = https://github.com/k8-proxy/vmware-scripts
-[submodule "cs-k8s-api"]
-	path = cs-k8s-api
-	url = https://github.com/elastisys/cs-k8s-api
 [submodule "icap-infrastructure"]
 	path = icap-infrastructure
 	url = https://github.com/samarthdd/icap-infrastructure
