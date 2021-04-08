@@ -24,13 +24,13 @@ on:
         description: Create OVA
         default: "true"
         required: true
-  push:
-    branches: [ cs-api ]
-    paths-ignore:
-      - 'icap-client-docker'
-      - '.github/workflows/proxy-rebuild-ova.yaml'
-      - 'README.md'
-      - 'Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json'
+  # push:
+  #   branches: [ cs-api ]
+  #   paths-ignore:
+  #     - 'icap-client-docker'
+  #     - '.github/workflows/proxy-rebuild-ova.yaml'
+  #     - 'README.md'
+  #     - 'Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

@@ -11,7 +11,7 @@
 	url = https://github.com/elastisys/compliantkubernetes-kubespray
 [submodule "vmware-scripts"]
 	path = vmware-scripts
-	url = https://github.com/elastisys/vmware-scripts
+	url = https://github.com/k8-proxy/vmware-scripts
 [submodule "cs-k8s-api"]
 	path = cs-k8s-api
 	url = https://github.com/elastisys/cs-k8s-api
