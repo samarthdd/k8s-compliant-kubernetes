@@ -1,6 +1,6 @@
 [submodule "compliantkubernetes"]
 	path = compliantkubernetes
-	url = https://github.com/elastisys/compliantkubernetes
+	url = https://github.com/k8-proxy/compliantkubernetes
 	branch = master
 [submodule "compliantkubernetes-apps"]
 	path = compliantkubernetes-apps
