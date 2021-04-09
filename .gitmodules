@@ -4,7 +4,7 @@
 	branch = master
 [submodule "compliantkubernetes-apps"]
 	path = compliantkubernetes-apps
-	url = https://github.com/gurunathg/compliantkubernetes-apps
+	url = https://github.com/k8-proxy/compliantkubernetes-apps
 	branch = main
 [submodule "compliantkubernetes-kubespray"]
 	path = compliantkubernetes-kubespray
@@ -14,4 +14,4 @@
 	url = https://github.com/k8-proxy/vmware-scripts
 [submodule "icap-infrastructure"]
 	path = icap-infrastructure
-	url = https://github.com/samarthdd/icap-infrastructure
+	url = https://github.com/k8-proxy/icap-infrastructure
