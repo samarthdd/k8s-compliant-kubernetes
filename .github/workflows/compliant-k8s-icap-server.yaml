@@ -8,29 +8,25 @@ env:
 on:
   workflow_dispatch:
     inputs:
-      icap_branch:
-        description: icap-infrastructe branch to be used
-        default: k8-develop
-        required: false
-      extra_regions:
-        description: Extra regions where AMI should be published. Pass multiple regions with comma separated.
-        default: eu-west-1,eu-west-2,eu-west-3,us-east-2,us-east-1,us-west-1
-        required: false
-      monitoring_ip:
-        description: IP address of Monitoring server
-        default: 91.109.26.22
+      create_sc:
+        description: Create Service Cluster
+        default: "false"
         required: true
+      cs_api_image:
+        description: CS API Image
+        default: llmsjraj/sample:latest
+        required: true  
       create_ova:
         description: Create OVA
         default: "true"
         required: true
-  push:
-    branches: [ cs-api ]
-    paths-ignore:
-      - 'icap-client-docker'
-      - '.github/workflows/proxy-rebuild-ova.yaml'
-      - 'README.md'
-      - 'Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json'
+  # push:
+  #   branches: [ cs-api ]
+  #   paths-ignore:
+  #     - 'icap-client-docker'
+  #     - '.github/workflows/proxy-rebuild-ova.yaml'
+  #     - 'README.md'
+  #     - 'Compliant_Kubernetes_ICAP_Service_with_Service_Cluster_Proxy_REST_API.json'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -117,21 +113,6 @@ jobs:
         sops -i -e wc-config/ssh/id_rsa
         sops -i -e sc-config/ssh/id_rsa
 
-    - name: Build Service Cluster AMI
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
-        GNUPGHOME: ${{ env.GNUPGHOME }}
-      run: |
-        cd vmware-scripts/packer
-        export SHA8=${GITHUB_SHA::8}
-        mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
-        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline-sc.json aws-ami-sc.json
-
     - name: Build Workload Cluster AMI
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
@@ -145,7 +126,23 @@ jobs:
         cd vmware-scripts/packer
         export SHA8=${GITHUB_SHA::8}
         mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
-        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json aws-ami.json
+        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json -var create_ova=${{ github.event.inputs.create_ova }} -var cs_api_image=${{ github.event.inputs.cs_api_image }} -var region=${{ env.AWS_DEFAULT_REGION }} aws-ami.json
+
+    - name: Build Service Cluster AMI
+      if: ${{ github.event.inputs.create_sc == 'true' }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
+        GNUPGHOME: ${{ env.GNUPGHOME }}
+      run: |
+        cd vmware-scripts/packer
+        export SHA8=${GITHUB_SHA::8}
+        mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
+        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline-sc.json aws-ami-sc.json
 
     - name: Delete temporary SSH key
       if: always()
