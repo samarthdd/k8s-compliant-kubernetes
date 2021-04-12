@@ -122,6 +122,8 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
         GNUPGHOME: ${{ env.GNUPGHOME }}
+        CS_API_IMAGE: ${{ github.event.inputs.cs_api_image }}
+        SSH_PASSWORD: ${{ secrets.DOCKER_EMAIL }}
       run: |
         cd vmware-scripts/packer
         export SHA8=${GITHUB_SHA::8}
