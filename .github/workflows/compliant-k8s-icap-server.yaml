@@ -130,7 +130,7 @@ jobs:
         DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} 
         DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
         DOCKER_EMAIL=${{ secrets.DOCKER_EMAIL }}
-        SSH_PASSWORD=${{ secrets.ICAP_SSH_PASSWORD }}
+        SSH_PASSWORD=${{ secrets.SSH_PASSWORD }}
         CS_API_IMAGE=${{ github.event.inputs.cs_api_image }}
         EOF
         export SHA8=${GITHUB_SHA::8}
