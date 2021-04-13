@@ -12,6 +12,3 @@
 [submodule "vmware-scripts"]
 	path = vmware-scripts
 	url = https://github.com/k8-proxy/vmware-scripts
-[submodule "icap-infrastructure"]
-	path = icap-infrastructure
-	url = https://github.com/k8-proxy/icap-infrastructure
