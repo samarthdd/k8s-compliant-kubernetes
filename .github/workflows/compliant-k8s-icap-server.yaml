@@ -126,6 +126,13 @@ jobs:
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
         cd vmware-scripts/packer
+        cat > .env <<EOF
+        DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} 
+        DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_EMAIL=${{ secrets.DOCKER_EMAIL }}
+        SSH_PASSWORD=${{ secrets.ICAP_SSH_PASSWORD }}
+        CS_API_IMAGE=${{ github.event.inputs.cs_api_image }}
+        EOF
         export SHA8=${GITHUB_SHA::8}
         mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
         PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline.json -var create_ova=${{ github.event.inputs.create_ova }} -var region=${{ env.AWS_DEFAULT_REGION }} aws-ami.json
