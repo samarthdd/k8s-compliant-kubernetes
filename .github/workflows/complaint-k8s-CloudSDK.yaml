@@ -17,8 +17,12 @@ on:
         default: llmsjraj/sample:latest
         required: true  
       create_ova:
-        description: Create OVA
-        default: "true"
+        description: Create Workload Cluster OVA
+        default: "false"
+        required: true
+      create_sc_ova:
+        description: Create Service Cluster OVA
+        default: "false"
         required: true
   # push:
   #   branches: [ cs-api ]
@@ -151,7 +155,7 @@ jobs:
         cd vmware-scripts/packer
         export SHA8=${GITHUB_SHA::8}
         mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
-        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline-sc.json aws-ami-sc.json
+        PACKER_LOG=1 PACKER_LOG_PATH=packer.log packer build -var-file=aws-vars-pipeline-sc.json -var create_sc_ova=${{ github.event.inputs.create_sc_ova }} aws-ami-sc.json
 
     - name: Delete temporary SSH key
       if: always()
