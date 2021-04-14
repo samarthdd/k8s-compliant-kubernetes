@@ -350,8 +350,8 @@
                     },
                     {
                         "IpProtocol": "TCP",
-                        "FromPort": "8000",
-                        "ToPort": "8000",
+                        "FromPort": "8080",
+                        "ToPort": "8080",
                         "CidrIp": "0.0.0.0/0"
                     },
                     {
@@ -421,7 +421,7 @@
                 "LoadBalancerArn": {
                     "Ref": "IcapLB"
                 },
-                "Port": 1346,
+                "Port": 1344,
                 "Protocol": "TCP"
             },
             "Metadata": {
@@ -439,11 +439,11 @@
                 "HealthCheckEnabled": true,
                 "HealthCheckIntervalSeconds": "30",
                 "HealthCheckPath": "/api/healthcheck",
-                "HealthCheckPort": 8000,
+                "HealthCheckPort": 8080,
                 "HealthCheckProtocol": "HTTP",
                 "HealthyThresholdCount": 2,
                 "UnhealthyThresholdCount": 2,
-                "Port": 1346,
+                "Port": 1344,
                 "Protocol": "TCP",
                 "VpcId": {
                     "Ref": "LBVPC"
@@ -858,16 +858,10 @@
                     },
                     {
                         "IpProtocol": "TCP",
-                        "FromPort": "8000",
-                        "ToPort": "8000",
+                        "FromPort": "8080",
+                        "ToPort": "8080",
                         "CidrIp": "0.0.0.0/0"
-                    },
-                    {
-                        "IpProtocol": "TCP",
-                        "FromPort": "1346",
-                        "ToPort": "1346",
-                        "CidrIp": "0.0.0.0/0"
-                    }
+                    }                    
                 ]
             },
             "Metadata": {
