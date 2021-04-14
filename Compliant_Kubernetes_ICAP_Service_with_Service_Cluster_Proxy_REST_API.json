@@ -140,13 +140,13 @@
         "IcapRequestProcessingImage": {
             "Description": "Enter the identifier of Docker image for icap-request-processing",
             "Type": "String",
-            "Default": "elastisys/icap-request-processing:v0.2.1",
+            "Default": "glasswallsolutions/icap-request-processing:main-ffd2a52",
             "ConstraintDescription": "Must be a valid image localtion"
         },
         "ProxyRestApiImage": {
             "Description": "Enter the identifier of Docker image for proxy-rest-api",
             "Type": "String",
-            "Default": "ggrig/cs-k8s-api:0.02",
+            "Default": "llmsjraj/sample:latest",
             "ConstraintDescription": "Must be a valid image localtion"
         }
     },
