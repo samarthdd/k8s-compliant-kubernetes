@@ -421,7 +421,7 @@
                 "LoadBalancerArn": {
                     "Ref": "IcapLB"
                 },
-                "Port": 1344,
+                "Port": 8080,
                 "Protocol": "TCP"
             },
             "Metadata": {
@@ -443,7 +443,7 @@
                 "HealthCheckProtocol": "HTTP",
                 "HealthyThresholdCount": 2,
                 "UnhealthyThresholdCount": 2,
-                "Port": 1344,
+                "Port": 8080,
                 "Protocol": "TCP",
                 "VpcId": {
                     "Ref": "LBVPC"
