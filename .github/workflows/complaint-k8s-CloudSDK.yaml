@@ -59,6 +59,7 @@ jobs:
 
     - name: Update apt
       run: |
+        printenv
         sudo apt -y update
 
     - name: Setup PWGEN
