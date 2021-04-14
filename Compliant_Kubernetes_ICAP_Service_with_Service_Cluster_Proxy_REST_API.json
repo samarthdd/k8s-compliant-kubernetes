@@ -350,8 +350,8 @@
                     },
                     {
                         "IpProtocol": "TCP",
-                        "FromPort": "7000",
-                        "ToPort": "7000",
+                        "FromPort": "8000",
+                        "ToPort": "8000",
                         "CidrIp": "0.0.0.0/0"
                     },
                     {
@@ -438,8 +438,8 @@
                 },
                 "HealthCheckEnabled": true,
                 "HealthCheckIntervalSeconds": "30",
-                "HealthCheckPath": "/status",
-                "HealthCheckPort": 7000,
+                "HealthCheckPath": "/api/healthcheck",
+                "HealthCheckPort": 8000,
                 "HealthCheckProtocol": "HTTP",
                 "HealthyThresholdCount": 2,
                 "UnhealthyThresholdCount": 2,
@@ -858,8 +858,8 @@
                     },
                     {
                         "IpProtocol": "TCP",
-                        "FromPort": "7000",
-                        "ToPort": "7000",
+                        "FromPort": "8000",
+                        "ToPort": "8000",
                         "CidrIp": "0.0.0.0/0"
                     },
                     {
