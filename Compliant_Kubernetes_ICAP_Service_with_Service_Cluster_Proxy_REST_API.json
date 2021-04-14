@@ -438,7 +438,7 @@
                 },
                 "HealthCheckEnabled": true,
                 "HealthCheckIntervalSeconds": "30",
-                "HealthCheckPath": "/api/healthcheck",
+                "HealthCheckPath": "/api/Health",
                 "HealthCheckPort": 8080,
                 "HealthCheckProtocol": "HTTP",
                 "HealthyThresholdCount": 2,
