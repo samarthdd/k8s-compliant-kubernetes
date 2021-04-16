@@ -14,7 +14,7 @@ on:
         required: true
       cs_api_image:
         description: CS API Image
-        default: llmsjraj/sample:latest
+        default: glasswallsolutions/cs-k8s-api:latest
         required: true  
       create_ova:
         description: Create Workload Cluster OVA

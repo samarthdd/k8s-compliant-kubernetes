@@ -146,7 +146,7 @@
         "ProxyRestApiImage": {
             "Description": "Enter the identifier of Docker image for proxy-rest-api",
             "Type": "String",
-            "Default": "llmsjraj/sample:latest",
+            "Default": "glasswallsolutions/cs-k8s-api:latest",
             "ConstraintDescription": "Must be a valid image localtion"
         }
     },
