@@ -20,12 +20,10 @@
         },
         "WorkloadClusterAmiId": {
             "Type": "AWS::EC2::Image::Id",
-            "Default": "ami-03a5c3c769d544878",
             "Description": "Enter AMI ID"
         },
         "ServiceClusterAmiId": {
             "Type": "AWS::EC2::Image::Id",
-            "Default": "ami-094b0b7846aaaba1b",
             "Description": "Enter AMI ID"
         },
         "WorkloadClusterInstanceSize": {
@@ -50,14 +48,13 @@
         },
         "ElasticIp": {
             "Type": "String",
-            "Default": "eipalloc-0c57d6f6b08d26527",
             "MinLength" : "1",
             "Description": "Enter Allocation ID of Elastic IP for Load Balancer",
             "ConstraintDescription": "Cannot be used by other stacks"
         },
         "WorkloadClusterTagName": {
             "Type": "String",
-            "Default": "cf-created-wc-ec2",
+            "Default": "GW-Ck8-Filedrop-wc",
             "MinLength" : "1",
             "MaxLength" : "128",
             "AllowedPattern": "[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*",
@@ -65,7 +62,7 @@
         },
         "ServiceClusterTagName": {
             "Type": "String",
-            "Default": "cf-created-sc-ec2",
+            "Default": "GW-Ck8-Filedrop-sc",
             "MinLength" : "1",
             "MaxLength" : "128",
             "AllowedPattern": "[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*",
@@ -626,7 +623,7 @@
                     },
                     {
                         "Key": "Owner",
-                        "Value": "jakub@elastisys.com",
+                        "Value": "Glasswall",
                         "PropagateAtLaunch": true
                     },
                     {
@@ -636,7 +633,7 @@
                     },
                     {
                         "Key": "Team",
-                        "Value": "Elastisys",
+                        "Value": "Glasswall",
                         "PropagateAtLaunch": true
                     },
                     {
@@ -719,7 +716,7 @@
                     },
                     {
                         "Key": "Owner",
-                        "Value": "jakub@elastisys.com"
+                        "Value": "Glaswall"
                     },
                     {
                         "Key": "Delete",
@@ -727,7 +724,7 @@
                     },
                     {
                         "Key": "Team",
-                        "Value": "Elastisys"
+                        "Value": "Glasswall"
                     },
                     {
                         "Key": "Scope",
