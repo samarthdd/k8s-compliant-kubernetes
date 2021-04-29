@@ -20,12 +20,10 @@
         },
         "WorkloadClusterAmiId": {
             "Type": "AWS::EC2::Image::Id",
-            "Default":"ami-0f85aaa12c6d4292c",
             "Description": "Enter AMI ID"
         },
         "ServiceClusterAmiId": {
             "Type": "AWS::EC2::Image::Id",
-            "Default":"ami-0589948f78ee4035b",
             "Description": "Enter AMI ID"
         },
         "WorkloadClusterInstanceSize": {
@@ -59,55 +57,8 @@
             "Type": "Number",
             "Default": "200",
             "MinValue": "20"
-        },
-        "AdaptationServiceImage": {
-            "Description": "Enter the identifier of Docker image for adaptation-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/icap-adaptation-service:main-5554d88",
-            "ConstraintDescription": "Must be a valid image localtion"
-        },
-        "ArchiveAdaptationServiceImage": {
-            "Description": "Enter the identifier of Docker image for archive-adaptation-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/archive-adaptation-service:main-b7c2653",
-            "ConstraintDescription": "Must be a valid image localtion"
-        },
-        "EventSubmissionServiceImage": {
-            "Description": "Enter the identifier of Docker image for event-submission-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/event-submission-service:main-eb7e5ec",
-            "ConstraintDescription": "Must be a valid image localtion"
-        },
-        "GlasswallIcapAdaptationEventApiImage": {
-            "Description": "Enter the identifier of Docker image for glasswall-icap-adaptation-event-api",
-            "Type": "String",
-            "Default": "glasswallsolutions/icap-adaptation-service:main-5554d88",
-            "ConstraintDescription": "Must be a valid image localtion"
-        },
-        "MvpIcapServiceImage": {
-            "Description": "Enter the identifier of Docker image for mvp-icap-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/mvp-icap-service:main-9b53c1c",
-            "ConstraintDescription": "Must be a valid image localtion"
-        },
-        "PolicyUpdateServiceImage": {
-            "Description": "Enter the identifier of Docker image for policy-update-service",
-            "Type": "String",
-            "Default": "glasswallsolutions/policy-update-service:main-5a6d7a1",
-            "ConstraintDescription": "Must be a valid image localtion"
-        },
-        "IcapRequestProcessingImage": {
-            "Description": "Enter the identifier of Docker image for icap-request-processing",
-            "Type": "String",
-            "Default": "glasswallsolutions/icap-request-processing:main-1fb95b9",
-            "ConstraintDescription": "Must be a valid image localtion"
-        },
-        "ProxyRestApiImage": {
-            "Description": "Enter the identifier of Docker image for proxy-rest-api",
-            "Type": "String",
-            "Default": "glasswallsolutions/cs-k8s-api:latest",
-            "ConstraintDescription": "Must be a valid image localtion"
         }
+        
     },
     "Outputs": {
         "LoadBalancerDNSName": {
@@ -753,6 +704,7 @@
                                 {
                                     "Fn::GetAtt":[ "CK8sServiceCluster" ,"PublicIp"]
                                 },
+                                "\n",
                                 "  service-cluster: ops.default.compliantkuberetes\n"
                             ]
                         ]
@@ -847,30 +799,6 @@
             "Metadata": {
                 "AWS::CloudFormation::Designer": {
                     "id": "d74ef0a9-38f9-4c2f-8f40-8a11ebe9b06d"
-                }
-            }
-        },
-        "PrivateHostedZone": {
-            "Type": "AWS::Route53::HostedZone",
-            "Properties": {
-                "HostedZoneConfig": {
-                    "Comment": "default.compliantkuberetes"
-                },
-                "Name": "default.compliantkuberetes",
-                "VPCs": [
-                    {
-                        "VPCId": {
-                            "Ref": "LBVPC"
-                        },
-                        "VPCRegion": {
-                            "Ref": "AWS::Region"
-                        }
-                    }
-                ]
-            },
-            "Metadata": {
-                "AWS::CloudFormation::Designer": {
-                    "id": "f2696748-9b09-40ff-9f0a-b6fa5e877845"
                 }
             }
         },
@@ -995,47 +923,7 @@
                 }
             }
         },
-        "PrivateHostedZoneRecordSetGroup": {
-            "Type": "AWS::Route53::RecordSetGroup",
-            "Properties": {
-                "HostedZoneId": {
-                    "Ref": "PrivateHostedZone"
-                },
-                "RecordSets": [
-                    {
-                        "Name": "*.default.compliantkuberetes",
-                        "Type": "A",
-                        "TTL": "900",
-                        "ResourceRecords": [
-                            {
-                                "Fn::GetAtt": [
-                                    "CK8sServiceCluster",
-                                    "PublicIp"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "Name": "*.ops.default.compliantkuberetes",
-                        "Type": "A",
-                        "TTL": "900",
-                        "ResourceRecords": [
-                            {
-                                "Fn::GetAtt": [
-                                    "CK8sServiceCluster",
-                                    "PublicIp"
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            "Metadata": {
-                "AWS::CloudFormation::Designer": {
-                    "id": "6ba6b7d2-f22d-446a-a306-2d1c96192b18"
-                }
-            }
-        },
+        
         "WorkloadClusterInstanceSecurityGroup": {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
