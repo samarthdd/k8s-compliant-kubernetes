@@ -26,7 +26,7 @@ Amazon CloudFormation launch Template is provided  in the repository to facilita
 
   ![Screenshot from 2021-03-25 17-13-06](https://user-images.githubusercontent.com/7603614/112506566-2fb20380-8d8e-11eb-9476-909cc8a751ed.png)
 
-* Enter `Stack name`
+* Enter `Stack name` (less than 20 characters)
 
   ![Screenshot from 2021-03-25 17-13-45](https://user-images.githubusercontent.com/7603614/112506657-45bfc400-8d8e-11eb-91a9-59e3c0b558ef.png)
 
@@ -45,24 +45,15 @@ Amazon CloudFormation launch Template is provided  in the repository to facilita
     ![pic2](https://user-images.githubusercontent.com/70108899/116323434-3fbe6800-a7be-11eb-975b-592d81187897.jpg)
 
     
-  Make sure that the following configuration parameters for **Load Balancer** are not used by other stacks in the AWS region:
-
-  * `Load Balancer Name`
-  * `Target Group Name`
-  * `Elastic IP`
-
-  ![Screenshot from 2021-03-25 17-14-34](https://user-images.githubusercontent.com/7603614/112506814-66881980-8d8e-11eb-9658-1a75fc15e043.png)
-
   
   * **Service Cluster** specification mainly AMI ID and Instance size, make sure the AMI is the one generated in the same github action run where you get the logging and monitory passwords above.
 
-    ![image](https://user-images.githubusercontent.com/58347752/115334763-3de01d80-a19c-11eb-9b90-c51201b81b29.png)
+    ![image](https://user-images.githubusercontent.com/17300331/116555949-8fb24180-a91a-11eb-8e1c-4bb506755a86.png)
 
   * **Workload Cluster** specification mainly AMI ID, Instance size and number of instances.
 
-    ![image](https://user-images.githubusercontent.com/58347752/115334920-88619a00-a19c-11eb-9ca6-a0de8f8855e1.png)
+    ![image](https://user-images.githubusercontent.com/17300331/116556059-af496a00-a91a-11eb-8367-a03373ad08e2.png)
 
-  * **Docker Images** used for the Glasswall services (by default latest images will be pre-provided)
 
 * When the stack creation is complete, in the **Outputs** tab you can find:
   * `Load Balancer DNS Name` which stand in-front of the workload cluster instances and accept requests on port `8080`
