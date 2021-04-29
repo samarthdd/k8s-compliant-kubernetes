@@ -732,47 +732,6 @@
                                 },
                                 "\n\n",
                                 "glasswall:\n",
-                                "  images: \n",
-                                "    adaptation-service: ",
-                                {
-                                    "Ref": "AdaptationServiceImage"
-                                },
-                                "\n",
-                                "    archive-adaptation-service: ",
-                                {
-                                    "Ref": "ArchiveAdaptationServiceImage"
-                                },
-                                "\n",
-                                "    event-submission-service: ",
-                                {
-                                    "Ref": "EventSubmissionServiceImage"
-                                },
-                                "\n",
-                                "    glasswall-icap-adaptation-event-api: ",
-                                {
-                                    "Ref": "GlasswallIcapAdaptationEventApiImage"
-                                },
-                                "\n",
-                                "    mvp-icap-service: ",
-                                {
-                                    "Ref": "MvpIcapServiceImage"
-                                },
-                                "\n",
-                                "    policy-update-service: ",
-                                {
-                                    "Ref": "PolicyUpdateServiceImage"
-                                },
-                                "\n",
-                                "    icap-request-processing: ",
-                                {
-                                    "Ref": "IcapRequestProcessingImage"
-                                },
-                                "\n",
-                                "    image-proxy-rest-api: ",
-                                {
-                                    "Ref": "ProxyRestApiImage"
-                                },
-                                "\n",
                                 "  monitoring:\n",
                                 "    username: wcWriter\n",
                                 "    password: ",
@@ -790,6 +749,10 @@
                                 },
                                 "\n",
                                 "  domain: default.compliantkuberetes\n",
+                                "  service-cluster-ip: ",
+                                {
+                                    "Fn::GetAtt":[ "CK8sServiceCluster" ,"PublicIp"]
+                                },
                                 "  service-cluster: ops.default.compliantkuberetes\n"
                             ]
                         ]
