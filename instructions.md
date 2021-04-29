@@ -66,12 +66,48 @@ Amazon CloudFormation launch Template is provided  in the repository to facilita
 
 * Testing workload cluster :
 
-  * Send and http request to `<LoadBalancer DNS Name>:8080/api/health`  you should receive `200 OK` which indicates healthy workload cluster 
+  * To check API health, from Browser access `<LoadBalancer DNS Name>/api/health` and verify its ok
 
-    ![pic1](https://user-images.githubusercontent.com/70108899/116323389-29181100-a7be-11eb-8fb4-5e8581e1b9db.jpg)
+    ![image](https://user-images.githubusercontent.com/70108899/116484783-179c3b00-a88a-11eb-9c79-c70e10847bed.png)
+    
+    or
+    
+    ```
+      curl -v "http://<LoadBalancer DNS Name>:8080/api/health/api/health"
+    ```
+  * To rebuild files, from Browser access Filedrop `<LoadBalancer DNS Name>` and select any file you want to rebuild 
+  * After file is rebuilt you will be able to download protected file along with XML report
+
+    ![image](https://user-images.githubusercontent.com/70108899/116483290-13225300-a887-11eb-9187-2327fc559a47.png)
 
 * Testing service cluster :
 
-  * From your browser go to service cluster IP provided in the outputs tab above on port 3000 to access Grafana and on port 5601 to acces Kibana
+  * From your browser go to service cluster IP provided in the outputs tab above on port 3000 to access Grafana and on port 5601 to access Kibana
 
   * **Grafana's Password** & **Kibana's Password** are the user.grafanaPassword & elasticsearch.adminPassword Values respectively that are generated during the github action run which produced the used service cluster AMI
+
+    ![pic1](https://user-images.githubusercontent.com/70108899/116323389-29181100-a7be-11eb-8fb4-5e8581e1b9db.jpg)
+    
+  * For Elastic from browser navigate to `http://<SC VM IP>:5601`
+   - From settings choose `Discover` and select one of three options for logs (kubespray*, kubernetes* or other*)
+   
+        ![image](https://user-images.githubusercontent.com/70108899/116484905-53370500-a88a-11eb-8477-d55c1db73519.png)
+        
+   - From settings choose `Dashboard` and select one of two available or create custom one. This option will give you more of a grafical overview compared to `Discover`
+   
+        ![image](https://user-images.githubusercontent.com/70108899/116485151-cf314d00-a88a-11eb-99d7-b5a7e1d15a91.png)
+     
+  * For Grafana from browser navigate to `http://<SC VM IP>:3000`
+
+   - Click on `Search` and type `Kubernetes / Compute Resources / Namespace (Pods)` and select the dashboard from search result
+
+        ![image](https://user-images.githubusercontent.com/64204445/116515131-85c41a80-a8e9-11eb-9d98-cf26f9b6f4e4.png)
+        
+   - Here you can switch between Workload clusters and also namespaces to see metrics
+   
+        ![image](https://user-images.githubusercontent.com/64204445/116515563-14d13280-a8ea-11eb-900b-58fe934cad07.png)
+
+
+   - `ck8s-metrics` data set is added and you can use it when creating custom dashbords
+  
+        ![image](https://user-images.githubusercontent.com/70108899/116485399-65fe0980-a88b-11eb-84ba-0d4e7d77c379.png)
