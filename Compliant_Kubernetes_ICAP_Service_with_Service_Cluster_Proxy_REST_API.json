@@ -4,26 +4,28 @@
     "Parameters": {
         "WorkloadClusterInstanceCount": {
             "Type": "Number",
-            "Default": "2",
+            "Default": "1",
             "MinValue": "1",
             "Description": "Enter number of instances to be created"
         },
         "MonitoringPassword": {
             "Type": "String",
-            "MinLength" : "1",
+            "MinLength": "1",
             "Description": "Enter monitoring password (plain text)"
         },
         "LoggingPassword": {
             "Type": "String",
-            "MinLength" : "1",
+            "MinLength": "1",
             "Description": "Enter logging password (plain text)"
         },
         "WorkloadClusterAmiId": {
             "Type": "AWS::EC2::Image::Id",
+            "Default":"ami-0f85aaa12c6d4292c",
             "Description": "Enter AMI ID"
         },
         "ServiceClusterAmiId": {
             "Type": "AWS::EC2::Image::Id",
+            "Default":"ami-0589948f78ee4035b",
             "Description": "Enter AMI ID"
         },
         "WorkloadClusterInstanceSize": {
@@ -38,53 +40,13 @@
         },
         "WorkloadClusterKeyName": {
             "Type": "AWS::EC2::KeyPair::KeyName",
-            "MinLength" : "1",
+            "MinLength": "1",
             "Description": "Select Key Pair used for the SSH access"
         },
         "ServiceClusterKeyName": {
             "Type": "AWS::EC2::KeyPair::KeyName",
-            "MinLength" : "1",
+            "MinLength": "1",
             "Description": "Select Key Pair used for the SSH access"
-        },
-        "ElasticIp": {
-            "Type": "String",
-            "MinLength" : "1",
-            "Description": "Enter Allocation ID of Elastic IP for Load Balancer",
-            "ConstraintDescription": "Cannot be used by other stacks"
-        },
-        "WorkloadClusterTagName": {
-            "Type": "String",
-            "Default": "GW-Ck8-Filedrop-wc",
-            "MinLength" : "1",
-            "MaxLength" : "128",
-            "AllowedPattern": "[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*",
-            "Description": "Enter the default Tag name for the EC2 instances"
-        },
-        "ServiceClusterTagName": {
-            "Type": "String",
-            "Default": "GW-Ck8-Filedrop-sc",
-            "MinLength" : "1",
-            "MaxLength" : "128",
-            "AllowedPattern": "[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*",
-            "Description": "Enter the default Tag name for the EC2 instances"
-        },
-        "TargetGroupName": {
-            "Type": "String",
-            "Default": "CompliantK8sICAPLBTargetGroup",
-            "MinLength" : "1",
-            "MaxLength" : "32",
-            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
-            "Description": "Enter the name of the target group",
-            "ConstraintDescription": "This name must be unique per region per account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, and must not begin or end with a hyphen."
-        },
-        "IcapLBName": {
-            "Type": "String",
-            "Default": "CompliantK8sICAPLB",
-            "MinLength" : "1",
-            "MaxLength" : "32",
-            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
-            "Description": "Enter the name of the load balancer",
-            "ConstraintDescription": "This name must be unique per region per account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, must not begin or end with a hyphen, and must not begin with \"internal-\"."
         },
         "WorkloadClusterEc2RootVolumeSize": {
             "Description": "Enter the EC2 root volume size",
@@ -224,6 +186,36 @@
                 }
             }
         },
+        "Subnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "LBVPC"
+                },
+                "CidrBlock": "10.16.4.0/22",
+                "Tags": [
+                    {
+                        "Key": "CFStack",
+                        "Value": {
+                            "Ref": "AWS::StackId"
+                        }
+                    }
+                ],
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        1,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "fd252d36-360e-44f0-a0f9-1134ab80502c"
+                }
+            }
+        },
         "InternetGateway": {
             "Type": "AWS::EC2::InternetGateway",
             "Properties": {
@@ -313,6 +305,22 @@
                 }
             }
         },
+        "SubnetRouteTableAssociation2": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "SubnetId": {
+                    "Ref": "Subnet2"
+                },
+                "RouteTableId": {
+                    "Ref": "LBVPCRouteTable"
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "f332a53b-d6a9-42f3-ba38-5f9e8425f44d"
+                }
+            }
+        },
         "ServiceClusterInstanceSecurityGroup": {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
@@ -369,25 +377,44 @@
             "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
             "Properties": {
                 "Name": {
-                    "Ref": "IcapLBName"
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "GWLB",
+                            {
+                                "Ref": "AWS::StackName"
+                            }
+                        ]
+                    ]
                 },
                 "Scheme": "internet-facing",
-                "SubnetMappings": [
+                "Subnets": [
                     {
-                        "AllocationId": {
-                            "Ref": "ElasticIp"
-                        },
-                        "SubnetId": {
-                            "Ref": "Subnet"
-                        }
+                        "Ref": "Subnet"
+                    },
+                    {
+                        "Ref": "Subnet2"
                     }
                 ],
-                "Type": "network",
+                "SecurityGroups": [
+                    {
+                        "Ref": "WorkloadClusterInstanceSecurityGroup"
+                    }
+                ],
+                "Type": "application",
                 "Tags": [
                     {
                         "Key": "Name",
                         "Value": {
-                            "Ref": "IcapLBName"
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "GWLB",
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    }
+                                ]
+                            ]
                         }
                     },
                     {
@@ -404,14 +431,14 @@
                 }
             }
         },
-        "IcapLBListener": {
+        "IcapLBListener8080": {
             "Type": "AWS::ElasticLoadBalancingV2::Listener",
             "Properties": {
                 "DefaultActions": [
                     {
                         "Type": "forward",
                         "TargetGroupArn": {
-                            "Ref": "IcapLBTargetGroup"
+                            "Ref": "IcapLBTargetGroup8080"
                         }
                     }
                 ],
@@ -419,7 +446,7 @@
                     "Ref": "IcapLB"
                 },
                 "Port": 8080,
-                "Protocol": "TCP"
+                "Protocol": "HTTP"
             },
             "Metadata": {
                 "AWS::CloudFormation::Designer": {
@@ -427,21 +454,75 @@
                 }
             }
         },
-        "IcapLBTargetGroup": {
+        "IcapLBListener80": {
+            "Type": "AWS::ElasticLoadBalancingV2::Listener",
+            "Properties": {
+                "DefaultActions": [
+                    {
+                        "Type": "forward",
+                        "TargetGroupArn": {
+                            "Ref": "IcapLBTargetGroup80"
+                        }
+                    }
+                ],
+                "LoadBalancerArn": {
+                    "Ref": "IcapLB"
+                },
+                "Port": 80,
+                "Protocol": "HTTP"
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "b440546a-f676-4de5-8f04-8db0a78862cc"
+                }
+            }
+        },
+        "IcapLBListener443": {
+            "Type": "AWS::ElasticLoadBalancingV2::Listener",
+            "Properties": {
+                "DefaultActions": [
+                    {
+                        "Type": "forward",
+                        "TargetGroupArn": {
+                            "Ref": "IcapLBTargetGroup443"
+                        }
+                    }
+                ],
+                "LoadBalancerArn": {
+                    "Ref": "IcapLB"
+                },
+                "Port": 443,
+                "Protocol": "HTTP"
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "b440546a-f676-4de5-8f04-8db0a78862cc"
+                }
+            }
+        },
+        "IcapLBTargetGroup8080": {
             "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
             "Properties": {
                 "Name": {
-                    "Ref": "TargetGroupName"
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "TG8080",
+                            {
+                                "Ref": "AWS::StackName"
+                            }
+                        ]
+                    ]
                 },
                 "HealthCheckEnabled": true,
                 "HealthCheckIntervalSeconds": "30",
                 "HealthCheckPath": "/api/Health",
                 "HealthCheckPort": 8080,
+                "Port": 8080,
                 "HealthCheckProtocol": "HTTP",
                 "HealthyThresholdCount": 2,
                 "UnhealthyThresholdCount": 2,
-                "Port": 8080,
-                "Protocol": "TCP",
+                "Protocol": "HTTP",
                 "VpcId": {
                     "Ref": "LBVPC"
                 },
@@ -455,7 +536,137 @@
                     {
                         "Key": "Name",
                         "Value": {
-                            "Ref": "TargetGroupName"
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "TG8080",
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    }
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "CFStack",
+                        "Value": {
+                            "Ref": "AWS::StackId"
+                        }
+                    }
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "d5a47980-ca87-44cf-a758-19389e29056c"
+                }
+            }
+        },
+        "IcapLBTargetGroup80": {
+            "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+            "Properties": {
+                "Name": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "TG80",
+                            {
+                                "Ref": "AWS::StackName"
+                            }
+                        ]
+                    ]
+                },
+                "HealthCheckEnabled": true,
+                "HealthCheckIntervalSeconds": "30",
+                "HealthCheckPath": "/api/Health",
+                "HealthCheckPort": 8080,
+                "Port": 80,
+                "HealthCheckProtocol": "HTTP",
+                "HealthyThresholdCount": 2,
+                "UnhealthyThresholdCount": 2,
+                "Protocol": "HTTP",
+                "VpcId": {
+                    "Ref": "LBVPC"
+                },
+                "TargetGroupAttributes": [
+                    {
+                        "Key": "deregistration_delay.timeout_seconds",
+                        "Value": 60
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "TG8080",
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    }
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "CFStack",
+                        "Value": {
+                            "Ref": "AWS::StackId"
+                        }
+                    }
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "d5a47980-ca87-44cf-a758-19389e29056c"
+                }
+            }
+        },
+        "IcapLBTargetGroup443": {
+            "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+            "Properties": {
+                "Name": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "TG443",
+                            {
+                                "Ref": "AWS::StackName"
+                            }
+                        ]
+                    ]
+                },
+                "HealthCheckEnabled": true,
+                "HealthCheckIntervalSeconds": "30",
+                "HealthCheckPath": "/api/Health",
+                "HealthCheckPort": 8080,
+                "Port": 443,
+                "HealthCheckProtocol": "HTTP",
+                "HealthyThresholdCount": 2,
+                "UnhealthyThresholdCount": 2,
+                "Protocol": "HTTP",
+                "VpcId": {
+                    "Ref": "LBVPC"
+                },
+                "TargetGroupAttributes": [
+                    {
+                        "Key": "deregistration_delay.timeout_seconds",
+                        "Value": 60
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "TG8080",
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    }
+                                ]
+                            ]
                         }
                     },
                     {
@@ -515,7 +726,10 @@
                                     "Ref": "AWS::StackName"
                                 },
                                 "   --resource WebServerGroup",
-                                "   --region eu-west-1",
+                                "   --region ",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
                                 "\n\n",
                                 "glasswall:\n",
                                 "  images: \n",
@@ -594,6 +808,9 @@
                 "VPCZoneIdentifier": [
                     {
                         "Ref": "Subnet"
+                    },
+                    {
+                        "Ref": "Subnet2"
                     }
                 ],
                 "LaunchConfigurationName": {
@@ -610,14 +827,28 @@
                 },
                 "TargetGroupARNs": [
                     {
-                        "Ref": "IcapLBTargetGroup"
+                        "Ref": "IcapLBTargetGroup8080"
+                    },
+                    {
+                        "Ref": "IcapLBTargetGroup80"
+                    },
+                    {
+                        "Ref": "IcapLBTargetGroup443"
                     }
                 ],
                 "Tags": [
                     {
                         "Key": "Name",
                         "Value": {
-                            "Ref": "WorkloadClusterTagName"
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "ck8-WC",
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    }
+                                ]
+                            ]
                         },
                         "PropagateAtLaunch": true
                     },
@@ -668,7 +899,9 @@
                         "VPCId": {
                             "Ref": "LBVPC"
                         },
-                        "VPCRegion": "eu-west-1"
+                        "VPCRegion": {
+                            "Ref": "AWS::Region"
+                        }
                     }
                 ]
             },
@@ -684,12 +917,20 @@
                 "InstanceType": {
                     "Ref": "ServiceClusterInstanceSize"
                 },
-                "NetworkInterfaces": [ {
-                  "AssociatePublicIpAddress": "true",
-                  "DeviceIndex": "0",
-                  "GroupSet": [{ "Ref" : "ServiceClusterInstanceSecurityGroup" }],
-                  "SubnetId": { "Ref" : "Subnet" }
-                } ],
+                "NetworkInterfaces": [
+                    {
+                        "AssociatePublicIpAddress": "true",
+                        "DeviceIndex": "0",
+                        "GroupSet": [
+                            {
+                                "Ref": "ServiceClusterInstanceSecurityGroup"
+                            }
+                        ],
+                        "SubnetId": {
+                            "Ref": "Subnet"
+                        }
+                    }
+                ],
                 "ImageId": {
                     "Ref": "ServiceClusterAmiId"
                 },
@@ -711,7 +952,15 @@
                     {
                         "Key": "Name",
                         "Value": {
-                            "Ref": "ServiceClusterTagName"
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "ck8-SC",
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    }
+                                ]
+                            ]
                         }
                     },
                     {
@@ -751,7 +1000,10 @@
                                     "Ref": "AWS::StackName"
                                 },
                                 "   --resource WebServerGroup",
-                                "   --region eu-west-1",
+                                "   --region ",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
                                 "\n\n",
                                 "  monitoring:\n",
                                 "    username: wcWriter\n",
@@ -849,8 +1101,14 @@
                     },
                     {
                         "IpProtocol": "TCP",
-                        "FromPort": "31829",
-                        "ToPort": "31829",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "TCP",
+                        "FromPort": "443",
+                        "ToPort": "443",
                         "CidrIp": "0.0.0.0/0"
                     },
                     {
@@ -858,7 +1116,7 @@
                         "FromPort": "8080",
                         "ToPort": "8080",
                         "CidrIp": "0.0.0.0/0"
-                    }                    
+                    }
                 ]
             },
             "Metadata": {
@@ -869,55 +1127,144 @@
         }
     },
     "Metadata": {
-        "AWS::CloudFormation::Interface" : {
-            "ParameterGroups" : [
-              {
-                "Label" : { "default" : "Credentials" },
-                "Parameters" : [ "ServiceClusterKeyName", "WorkloadClusterKeyName", "LoggingPassword", "MonitoringPassword" ]
-              },
-              {
-                "Label" : { "default" : "Load Balancer" },
-                "Parameters" : [ "IcapLBName", "TargetGroupName", "ElasticIp" ]
-              },
-              {
-                "Label" : { "default":"Service Cluster" },
-                "Parameters" : [ "ServiceClusterAmiId", "ServiceClusterInstanceSize", "ServiceClusterEc2RootVolumeSize", "ServiceClusterTagName" ]
-              },
-              {
-                "Label" : { "default":"Workload Cluster" },
-                "Parameters" : [ "WorkloadClusterInstanceCount", "WorkloadClusterAmiId", "WorkloadClusterInstanceSize", "WorkloadClusterEc2RootVolumeSize", "WorkloadClusterTagName" ]
-              },
-              {
-                "Label" : { "default":"Docker Images" },
-                "Parameters" : [ "AdaptationServiceImage", "ArchiveAdaptationServiceImage", "EventSubmissionServiceImage", "GlasswallIcapAdaptationEventApiImage", "MvpIcapServiceImage", "PolicyUpdateServiceImage", "IcapRequestProcessingImage", "ProxyRestApiImage" ]
-              }
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "Credentials"
+                    },
+                    "Parameters": [
+                        "ServiceClusterKeyName",
+                        "WorkloadClusterKeyName",
+                        "LoggingPassword",
+                        "MonitoringPassword"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Load Balancer"
+                    },
+                    "Parameters": [
+                        "IcapLBName",
+                        "TargetGroupName",
+                        "ElasticIp"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Service Cluster"
+                    },
+                    "Parameters": [
+                        "ServiceClusterAmiId",
+                        "ServiceClusterInstanceSize",
+                        "ServiceClusterEc2RootVolumeSize",
+                        "ServiceClusterTagName"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Workload Cluster"
+                    },
+                    "Parameters": [
+                        "WorkloadClusterInstanceCount",
+                        "WorkloadClusterAmiId",
+                        "WorkloadClusterInstanceSize",
+                        "WorkloadClusterEc2RootVolumeSize",
+                        "WorkloadClusterTagName"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Docker Images"
+                    },
+                    "Parameters": [
+                        "AdaptationServiceImage",
+                        "ArchiveAdaptationServiceImage",
+                        "EventSubmissionServiceImage",
+                        "GlasswallIcapAdaptationEventApiImage",
+                        "MvpIcapServiceImage",
+                        "PolicyUpdateServiceImage",
+                        "IcapRequestProcessingImage",
+                        "ProxyRestApiImage"
+                    ]
+                }
             ],
-            "ParameterLabels" : {
-                "ServiceClusterKeyName" : { "default" : "Service Cluster Key Name" },
-                "WorkloadClusterKeyName" : { "default" : "Workload Cluster Key Name" },
-                "LoggingPassword" : { "default" : "Logging Password" },
-                "MonitoringPassword" : { "default" : "Monitoring Password" },
-                "IcapLBName" : { "default" : "Load Balancer Name" },
-                "TargetGroupName" : { "default" : "Target Group Name" },
-                "ElasticIp" : { "default" : "Elastic IP" },
-                "ServiceClusterAmiId" : { "default" : "AMI" },
-                "ServiceClusterInstanceSize" : { "default" : "Instance Size" },
-                "ServiceClusterEc2RootVolumeSize" : { "default" : "EC2 Root Volume Size" },
-                "ServiceClusterTagName" : { "default" : "Tag Name"},
-                "WorkloadClusterInstanceCount" : { "default" : "Numer of clusters" },
-                "WorkloadClusterAmiId" : { "default" : "AMI" },
-                "WorkloadClusterInstanceSize" : { "default" : "Instance Size" },
-                "WorkloadClusterEc2RootVolumeSize" : { "default" : "EC2 Root Volume Size" },
-                "WorkloadClusterTagName" : { "default" : "Tag Name"},
-                "AdaptationServiceImage" : { "default" : "Adaptation Service" },
-                "ArchiveAdaptationServiceImage" : { "default" : "Archive Adaptation Service" },
-                "EventSubmissionServiceImage" : { "default" : "Event Submission Service" },
-                "MvpIcapServiceImage" : { "default" : "MVP ICAP Service" },
-                "PolicyUpdateServiceImage" : { "default" : "Policy Update Service" },
-                "IcapRequestProcessingImage" : { "default" : "ICAP Request Processing Service" },
-                "ProxyRestApiImage" : { "default" : "Proxy Rest API Service" },
-                "LoadBalancerDNSName" : { "default" : "Load Balancer DNS Name" },
-                "ServiceClusterIP" : { "default" : "Service Cluster IP" }
+            "ParameterLabels": {
+                "ServiceClusterKeyName": {
+                    "default": "Service Cluster Key Name"
+                },
+                "WorkloadClusterKeyName": {
+                    "default": "Workload Cluster Key Name"
+                },
+                "LoggingPassword": {
+                    "default": "Logging Password"
+                },
+                "MonitoringPassword": {
+                    "default": "Monitoring Password"
+                },
+                "IcapLBName": {
+                    "default": "Load Balancer Name"
+                },
+                "TargetGroupName": {
+                    "default": "Target Group Name"
+                },
+                "ElasticIp": {
+                    "default": "Elastic IP"
+                },
+                "ServiceClusterAmiId": {
+                    "default": "AMI"
+                },
+                "ServiceClusterInstanceSize": {
+                    "default": "Instance Size"
+                },
+                "ServiceClusterEc2RootVolumeSize": {
+                    "default": "EC2 Root Volume Size"
+                },
+                "ServiceClusterTagName": {
+                    "default": "Tag Name"
+                },
+                "WorkloadClusterInstanceCount": {
+                    "default": "Numer of clusters"
+                },
+                "WorkloadClusterAmiId": {
+                    "default": "AMI"
+                },
+                "WorkloadClusterInstanceSize": {
+                    "default": "Instance Size"
+                },
+                "WorkloadClusterEc2RootVolumeSize": {
+                    "default": "EC2 Root Volume Size"
+                },
+                "WorkloadClusterTagName": {
+                    "default": "Tag Name"
+                },
+                "AdaptationServiceImage": {
+                    "default": "Adaptation Service"
+                },
+                "ArchiveAdaptationServiceImage": {
+                    "default": "Archive Adaptation Service"
+                },
+                "EventSubmissionServiceImage": {
+                    "default": "Event Submission Service"
+                },
+                "MvpIcapServiceImage": {
+                    "default": "MVP ICAP Service"
+                },
+                "PolicyUpdateServiceImage": {
+                    "default": "Policy Update Service"
+                },
+                "IcapRequestProcessingImage": {
+                    "default": "ICAP Request Processing Service"
+                },
+                "ProxyRestApiImage": {
+                    "default": "Proxy Rest API Service"
+                },
+                "LoadBalancerDNSName": {
+                    "default": "Load Balancer DNS Name"
+                },
+                "ServiceClusterIP": {
+                    "default": "Service Cluster IP"
+                }
             }
         },
         "AWS::CloudFormation::Designer": {
