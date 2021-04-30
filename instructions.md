@@ -1,5 +1,9 @@
 # Deploy GW Cloud SDK with compliant kubernetes (worker and service cluster)
 
+## Prerequisites
+
+-  One aws `key-pair` in respective region
+
 ## Deployment instructions using AMI
 
 Worker and service cluster AMIs are automatically created by running **CK8icap-GW_CloudSDK** workflow in GitHub Actions using Packer.
@@ -69,12 +73,7 @@ Amazon CloudFormation launch Template is provided  in the repository to facilita
   * To check API health, from Browser access `<LoadBalancer DNS Name>/api/health` and verify its ok
 
     ![image](https://user-images.githubusercontent.com/70108899/116484783-179c3b00-a88a-11eb-9c79-c70e10847bed.png)
-    
-    or
-    
-    ```
-      curl -v "http://<LoadBalancer DNS Name>:8080/api/health/api/health"
-    ```
+
   * To rebuild files, from Browser access Filedrop `<LoadBalancer DNS Name>` and select any file you want to rebuild 
   * After file is rebuilt you will be able to download protected file along with XML report
 
