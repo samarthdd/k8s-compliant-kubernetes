@@ -137,7 +137,7 @@ jobs:
         DOCKER_EMAIL=${{ secrets.DOCKER_EMAIL }}
         SSH_PASSWORD=${{ secrets.SSH_PASSWORD }}
         CS_API_IMAGE=${{ github.event.inputs.cs_api_image }}
-        MINIO_SECRET= ${{ secrets.MINIO_SECRET }}
+        MINIO_SECRET=${{ secrets.MINIO_SECRET }}
         EOF
         export RUN_ID=${GITHUB_RUN_ID}
         mkdir -p ../../compliant-k8s-icap-server-pipeline/.state
